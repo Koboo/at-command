@@ -1,6 +1,0 @@
-dependencies {
-    compileOnly "dev.cobblesword.nachospigot:api:${nachoVersion}"
-    compileOnly "dev.cobblesword.nachospigot:nachospigot:${nachoVersion}"
-
-    implementation project(':core-template')
-}

@@ -1,4 +1,4 @@
-rootProject.name = 'template'
-include 'core-template'
-include 'bungee-template'
-include 'bukkit-template'
+rootProject.name = 'at-command'
+include 'core-at-command'
+include 'bungee-at-command'
+include 'bukkit-at-command'
