@@ -1,0 +1,80 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'maven-publish'
+}
+
+subprojects {
+
+    apply plugin: 'java'
+    apply plugin: 'com.github.johnrengelman.shadow'
+    apply plugin: 'maven-publish'
+
+    group 'dev.binflux'
+    version "${projectVersion}"
+
+    repositories {
+        mavenCentral()
+        maven {
+            name 'bungeecord-repo'
+            url 'https://oss.sonatype.org/content/repositories/snapshots'
+        }
+        maven {
+            name 'koboo-public-repo'
+            url 'https://repo.koboo.eu/releases'
+        }
+        maven {
+            name 'koboo-private-repo'
+            url 'https://repo.koboo.eu/binflux'
+            credentials {
+                username System.getenv('REPO_USER')
+                password System.getenv('REPO_TOKEN')
+            }
+        }
+        maven {
+            url "https://repo.dmulloy2.net/repository/public/"
+        }
+    }
+
+    dependencies {
+        compileOnly "org.projectlombok:lombok:${lombokVersion}"
+        annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    }
+
+    compileJava.options.encoding = 'UTF-8'
+
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
+
+    java {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    processResources {
+        filter {
+            it.replace('PROJECT_VERSION': "${projectVersion}".toString())
+                    .replace('PROJECT_NAME': project.name)
+                    .replace('BUNGEE_MAIN': "${bungeeMain}")
+                    .replace('BUKKIT_MAIN': "${bukkitMain}")
+        }
+    }
+
+    publishing {
+        repositories {
+            maven {
+                url = 'https://repo.koboo.eu/binflux'
+                credentials {
+                    username = System.getenv('REPO_USER')
+                    password = System.getenv('REPO_TOKEN')
+                }
+            }
+        }
+        publications {
+            maven(MavenPublication) {
+                from components.java
+            }
+        }
+    }
+}

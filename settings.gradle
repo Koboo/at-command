@@ -1,0 +1,4 @@
+rootProject.name = 'template'
+include 'core-template'
+include 'bungee-template'
+include 'bukkit-template'

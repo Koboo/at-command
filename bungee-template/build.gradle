@@ -1,0 +1,5 @@
+dependencies {
+    compileOnly 'net.md-5:bungeecord-api:1.8-SNAPSHOT'
+
+    implementation project(':core-template')
+}
