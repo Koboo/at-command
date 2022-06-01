@@ -7,6 +7,7 @@ the command class or the methods within the class.
 ## Overview
 
 * [Dependency](#dependency)
+* [Upcoming Features](#upcoming-features)
 * [Command Annotations](#command-annotations)
 * [Method Annotations](#method-annotations)
 * [Option Annotations](#option-annotations)
@@ -40,6 +41,11 @@ dependencies {
     compileOnly 'dev.binflux:bukkit-at-command:1.0'
 }
 ```
+
+### Upcoming Features
+
+* ``@Usage("<argument> [optional] whatever")`` annotation for method to define unique usage/help messages
+* Bukkit auto-completion without dependencies and without reflections
 
 ## Usage
 
