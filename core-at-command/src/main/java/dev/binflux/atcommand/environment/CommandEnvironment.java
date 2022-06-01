@@ -22,6 +22,7 @@ public abstract class CommandEnvironment implements Environment {
         return environment;
     }
 
+    private final CommandResolver commandResolver;
     private final Map<Object, CommandMeta> commandRegistry;
     private final Map<Class<?>, ParameterParser<?>> parserRegistry;
 
@@ -31,8 +32,10 @@ public abstract class CommandEnvironment implements Environment {
     public CommandEnvironment() {
         environment = this;
 
+        commandResolver = new CommandResolver(this);
         commandRegistry = new HashMap<>();
         parserRegistry = new HashMap<>();
+
         registerParser(new BooleanParser());
         registerParser(new DoubleParser());
         registerParser(new FloatParser());
@@ -43,128 +46,25 @@ public abstract class CommandEnvironment implements Environment {
         registerParser(new UUIDParser());
     }
 
+    @SuppressWarnings("all")
+    protected Map<Class<?>, ParameterParser<?>> getParserRegistry() {
+        return parserRegistry;
+    }
+
     @Override
     public <T> void registerCommand(T command) {
 
         Class<?> commandClass = command.getClass();
-        String className = commandClass.getName();
 
         try {
-            boolean isGlobalCommand = commandClass.getAnnotation(Global.class) != null;
-
-            List<String> aliasList = new ArrayList<>();
-            if (!isGlobalCommand) {
-
-                Alias annotation = commandClass.getAnnotation(Alias.class);
-                if (annotation == null) {
-                    throw new InvalidCommandException(className + " must have @Alias annotation!");
-                }
-
-                for (String alias : annotation.alias()) {
-                    alias = alias.toLowerCase(Locale.ROOT);
-                    if (!aliasList.contains(alias)) {
-                        aliasList.add(alias);
-                    }
-                }
-
-                if (aliasList.isEmpty()) {
-                    throw new InvalidCommandException(className + " doesn't have any command aliases!");
-                }
-            }
-
-            // Check the root-permission on class
-            String rootPermission = null;
-            if (commandClass.isAnnotationPresent(Access.class)) {
-                Access access = commandClass.getAnnotation(Access.class);
-                rootPermission = access.value();
-            }
-
-            MethodMeta defaultMeta = null;
-            MethodMeta helpMeta = null;
-            MethodMeta noPermissionMeta = null;
-            MethodMeta errorMeta = null;
-            MethodMeta notAPlayerMeta = null;
-            List<MethodMeta> subCommandMetaList = new LinkedList<>();
-
-            // Iterate through all methods and load them
-            for (Method method : commandClass.getMethods()) {
-
-                String methodName = method.getName();
-                String clazzName = commandClass.getName();
-
-                // Load and handle Default method
-                if (method.isAnnotationPresent(Default.class)) {
-                    // Load default method and assign to field
-                    defaultMeta = loadMeta(commandClass, method);
-                    continue;
-                }
-
-                // Load and handle Help method
-                if (method.isAnnotationPresent(OnHelp.class)) {
-                    helpMeta = loadMeta(commandClass, method);
-                    continue;
-                }
-
-                // Load and handle NoPermission method
-                if (method.isAnnotationPresent(NoPermission.class)) {
-                    noPermissionMeta = loadMeta(commandClass, method);
-                    continue;
-                }
-
-                // Load and handle Error method
-                if (method.isAnnotationPresent(OnError.class)) {
-                    errorMeta = loadMeta(commandClass, method);
-                    continue;
-                }
-
-                // Load and handle WrongSender method
-                if (method.isAnnotationPresent(WrongSender.class)) {
-                    notAPlayerMeta = loadMeta(commandClass, method);
-                    continue;
-                }
-
-                // Load and handle Sub methods
-                if (method.isAnnotationPresent(Subcommand.class)) {
-
-                    // Load and put sub method into registry
-                    MethodMeta methodMeta = loadMeta(commandClass, method);
-
-                    for (MethodMeta otherMeta : subCommandMetaList) {
-
-                        // Check for same names
-                        if (otherMeta.getMethod().getName().equalsIgnoreCase(methodMeta.getMethod().getName())) {
-                            throw new InvalidCommandException(clazzName + " method " + methodName + " already exists! Method names have to be unique!");
-                        }
-
-                        // Check for same signature
-                        if (otherMeta.getParameterIndex().size() == methodMeta.getParameterIndex().size()
-                                && otherMeta.getSubCommand().equalsIgnoreCase(methodMeta.getSubCommand())) {
-                            throw new InvalidCommandException(clazzName + " method " + methodName + " and method " +
-                                    otherMeta.getMethod().getName() + " have the same @Subcommand String and same parameter index! It's not allowed, to ensure method uniqueness!");
-                        }
-                    }
-
-                    subCommandMetaList.add(methodMeta);
-                    subCommandMetaList.sort(new OrderComparator());
-                    //continue;
-                }
-            }
-
-            boolean showHelpOnDefault = commandClass.isAnnotationPresent(ShowHelpOnDefault.class);
-            boolean showHelpOnError = commandClass.isAnnotationPresent(ShowHelpOnDefault.class);
-            boolean showHelpWithError = commandClass.isAnnotationPresent(ShowHelpWithError.class);
-
-
-            CommandMeta meta = new CommandMeta(aliasList, rootPermission, defaultMeta, helpMeta, noPermissionMeta, errorMeta,
-                    notAPlayerMeta, subCommandMetaList, isGlobalCommand, showHelpOnDefault, showHelpOnError, showHelpWithError);
-            if (isGlobalCommand) {
+            CommandMeta meta = commandResolver.resolveCommand(commandClass);
+            if (meta.isGlobalCommand()) {
                 globalCommand = command;
                 globalCommandMeta = meta;
+                return;
             }
             commandRegistry.put(command, meta);
-
             afterRegistration(command, meta);
-
         } catch (InvalidCommandException e) {
             e.printStackTrace();
         }
