@@ -11,16 +11,21 @@ public class AtCommandPlugin extends JavaPlugin {
     private BukkitCommandEnvironment environment;
 
     @Override
-    public void onEnable() {
+    public void onLoad() {
         environment = new BukkitCommandEnvironment(this);
+        super.onLoad();
+    }
 
+    @Override
+    public void onEnable() {
         Bukkit.getPluginManager().registerEvents(new PlayerCommandPreprocessListener(environment), this);
         Bukkit.getPluginManager().registerEvents(new ServerCommandListener(environment), this);
+        super.onEnable();
     }
 
     @Override
     public void onDisable() {
-        environment = null;
+        super.onDisable();
     }
 
 }

@@ -10,14 +10,19 @@ public class AtCommandPlugin extends Plugin {
     private BungeeCommandEnvironment environment;
 
     @Override
-    public void onEnable() {
+    public void onLoad() {
         environment = new BungeeCommandEnvironment(this);
+        super.onLoad();
+    }
 
+    @Override
+    public void onEnable() {
         ProxyServer.getInstance().getPluginManager().registerListener(this, new TabCompleteListener(environment));
+        super.onEnable();
     }
 
     @Override
     public void onDisable() {
-        environment = null;
+        super.onDisable();
     }
 }
