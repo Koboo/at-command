@@ -54,9 +54,6 @@ dependencies {
 Set command and aliases:
 * ``@Alias(alias = {"command", "labels", "here"}``
 
-Execute ``OnHelp``-method if no ``Default``-method is defined:
-* ``@ShowHelpOnDefault``
-
 Execute ``OnHelp``-method if no ``OnError``-method is defined:
 * ``@ShowHelpOnError``
 
@@ -154,7 +151,6 @@ public class ExampleCommand {
 * Now we can replace ``@Default`` with ``@OnHelp``, just annotate the command with ``@ShowHelpOnDefault``
 ````java
 @Alias(alias = {"example", "examplecommand"})
-@ShowHelpOnDefault
 public class ExampleCommand {
     
     @OnHelp
@@ -172,7 +168,6 @@ public class ExampleCommand {
 ````java
 @Alias(alias = {"example", "examplecommand"})
 @ShowHelpWithError
-@ShowHelpOnDefault
 public class ExampleCommand {
     
     @OnHelp
@@ -195,7 +190,6 @@ public class ExampleCommand {
 ````java
 @Alias(alias = {"example", "examplecommand"})
 @ShowHelpOnError
-@ShowHelpOnDefault
 public class ExampleCommand {
     
     @OnHelp
@@ -214,7 +208,6 @@ public class ExampleCommand {
 ````java
 @Alias(alias = {"example", "examplecommand"})
 @ShowHelpOnError
-@ShowHelpOnDefault
 public class ExampleCommand {
     
     @OnHelp
@@ -238,7 +231,6 @@ public class ExampleCommand {
 ````java
 @Alias(alias = {"example", "examplecommand"})
 @ShowHelpOnError
-@ShowHelpOnDefault
 public class ExampleCommand {
     
     @OnHelp
@@ -256,7 +248,6 @@ public class ExampleCommand {
 ````java
 @Alias(alias = {"example", "examplecommand"})
 @ShowHelpOnError
-@ShowHelpOnDefault
 public class ExampleCommand {
     
     @OnHelp
