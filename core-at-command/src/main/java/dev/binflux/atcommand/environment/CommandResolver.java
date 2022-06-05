@@ -1,9 +1,6 @@
 package dev.binflux.atcommand.environment;
 
-import dev.binflux.atcommand.annotations.command.Alias;
-import dev.binflux.atcommand.annotations.command.Global;
-import dev.binflux.atcommand.annotations.command.ShowHelpOnDefault;
-import dev.binflux.atcommand.annotations.command.ShowHelpWithError;
+import dev.binflux.atcommand.annotations.command.*;
 import dev.binflux.atcommand.annotations.method.*;
 import dev.binflux.atcommand.annotations.options.Access;
 import dev.binflux.atcommand.annotations.options.Async;
@@ -129,13 +126,11 @@ public class CommandResolver {
             }
         }
 
-        boolean showHelpOnDefault = commandClass.isAnnotationPresent(ShowHelpOnDefault.class);
-        boolean showHelpOnError = commandClass.isAnnotationPresent(ShowHelpOnDefault.class);
+        boolean showHelpOnError = commandClass.isAnnotationPresent(ShowHelpOnError.class);
         boolean showHelpWithError = commandClass.isAnnotationPresent(ShowHelpWithError.class);
 
-
         return new CommandMeta(aliasList, rootPermission, defaultMeta, helpMeta, noPermissionMeta, errorMeta,
-                notAPlayerMeta, subCommandMetaList, isGlobalCommand, showHelpOnDefault, showHelpOnError, showHelpWithError);
+                notAPlayerMeta, subCommandMetaList, isGlobalCommand, showHelpOnError, showHelpWithError);
     }
 
 

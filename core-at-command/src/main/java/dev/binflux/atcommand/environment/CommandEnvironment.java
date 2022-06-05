@@ -172,7 +172,7 @@ public abstract class CommandEnvironment implements Environment {
 
     @Override
     public void registerParser(ParameterParser<?> parameterParser, boolean override) {
-        if(override) {
+        if (override) {
             parserRegistry.remove(parameterParser.getType());
         }
         if (parserRegistry.containsKey(parameterParser.getType())) {
@@ -295,7 +295,7 @@ public abstract class CommandEnvironment implements Environment {
                             if (meta.isShowHelpWithError()) {
                                 callHelpSubCommand(sender, label, command, meta, methodMeta);
                             }
-                            if(globalCommandMeta != null && globalCommandMeta.getHelpMeta() != null) {
+                            if (globalCommandMeta != null && globalCommandMeta.getHelpMeta() != null) {
                                 if (handleSenderType(globalCommand, globalCommandMeta, sender, globalCommandMeta.getErrorMeta())) {
                                     return true;
                                 }
@@ -349,7 +349,7 @@ public abstract class CommandEnvironment implements Environment {
                 meta.getWrongSenderMeta().getMethod().invoke(command, sender);
                 return true;
             } else {
-                if(globalCommandMeta != null && globalCommandMeta.getHelpMeta() != null) {
+                if (globalCommandMeta != null && globalCommandMeta.getHelpMeta() != null) {
                     globalCommandMeta.getWrongSenderMeta().getMethod().invoke(globalCommand, sender);
                     return true;
                 }
@@ -361,7 +361,7 @@ public abstract class CommandEnvironment implements Environment {
     private <T> boolean callHelp(Object command, CommandMeta meta, T sender, CommandHelp commandHelp)
             throws InvocationTargetException, IllegalAccessException {
         if (meta.getHelpMeta() == null) {
-            if(globalCommandMeta != null && globalCommandMeta.getHelpMeta() != null) {
+            if (globalCommandMeta != null && globalCommandMeta.getHelpMeta() != null) {
                 if (handleSenderType(globalCommand, globalCommandMeta, sender, globalCommandMeta.getHelpMeta())) {
                     return true;
                 }
@@ -380,10 +380,7 @@ public abstract class CommandEnvironment implements Environment {
     private <T> boolean callDefault(String label, Object command, CommandMeta meta, T sender)
             throws InvocationTargetException, IllegalAccessException {
         if (meta.getDefaultMeta() == null) {
-            if (meta.isShowHelpOnDefault()) {
-                return callHelpAllSubcommands(sender, label, command, meta);
-            }
-            return false;
+            return callHelpAllSubcommands(sender, label, command, meta);
         }
         if (handleSenderType(command, meta, sender, meta.getDefaultMeta())) {
             return true;
@@ -413,7 +410,7 @@ public abstract class CommandEnvironment implements Environment {
     private <T> boolean callNoPermission(Object command, CommandMeta meta, T sender, String permission, String commandString)
             throws InvocationTargetException, IllegalAccessException {
         if (meta.getNoPermissionMeta() == null) {
-            if(globalCommandMeta != null && globalCommandMeta.getHelpMeta() != null) {
+            if (globalCommandMeta != null && globalCommandMeta.getHelpMeta() != null) {
                 if (handleSenderType(globalCommand, globalCommandMeta, sender, globalCommandMeta.getNoPermissionMeta())) {
                     return true;
                 }
@@ -434,7 +431,7 @@ public abstract class CommandEnvironment implements Environment {
         if (!getPlayerClass().isAssignableFrom(sender.getClass()) && !getConsoleClass().isAssignableFrom(sender.getClass())) {
             return new ArrayList<>();
         }
-        if(suggestions == null || suggestions.isEmpty()) {
+        if (suggestions == null || suggestions.isEmpty()) {
             suggestions = new ArrayList<>();
         }
         List<String> completions = new ArrayList<>(suggestions);
@@ -468,7 +465,7 @@ public abstract class CommandEnvironment implements Environment {
                 }
             }
             // Only show subcommands of the typed command
-            if(!meta.getAliasList().contains(label.toLowerCase(Locale.ROOT))) {
+            if (!meta.getAliasList().contains(label.toLowerCase(Locale.ROOT))) {
                 continue;
             }
 

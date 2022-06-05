@@ -18,7 +18,6 @@ public class CommandMeta {
     private final MethodMeta wrongSenderMeta;
     private final List<MethodMeta> subCommandMetaList;
     private final boolean isGlobalCommand;
-    private final boolean showHelpOnDefault;
     private final boolean showHelpOnError;
     private final boolean showHelpWithError;
 
