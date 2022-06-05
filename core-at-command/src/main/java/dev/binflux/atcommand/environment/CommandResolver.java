@@ -186,29 +186,39 @@ public class CommandResolver {
             order = method.getAnnotation(Order.class).value();
         }
 
-        StringBuilder syntaxBuilder = new StringBuilder();
-        if (subCommand != null && !subCommand.equalsIgnoreCase("")) {
-            syntaxBuilder.append(subCommand).append(" ");
+        String usage = null;
+        if(method.isAnnotationPresent(Usage.class)) {
+            usage = method.getAnnotation(Usage.class).value();
         }
-        boolean senderSkipped = false;
-        for (Class<?> parameterType : method.getParameterTypes()) {
-            if (!senderSkipped) {
-                senderSkipped = true;
-                continue;
-            }
-            String parameterSyntax = parameterType.getSimpleName();
 
-            ParameterParser<?> parameterParser = environment.getParserRegistry().get(parameterType);
-            if (parameterParser != null) {
-                parameterSyntax = parameterParser.friendlyName();
+        CommandSyntax commandSyntax;
+        if(usage == null) {
+            StringBuilder syntaxBuilder = new StringBuilder();
+            if (subCommand != null && !subCommand.equalsIgnoreCase("")) {
+                syntaxBuilder.append(subCommand).append(" ");
             }
-            syntaxBuilder.append("<").append(parameterSyntax).append(">").append(" ");
+            boolean senderSkipped = false;
+            for (Class<?> parameterType : method.getParameterTypes()) {
+                if (!senderSkipped) {
+                    senderSkipped = true;
+                    continue;
+                }
+                String parameterSyntax = parameterType.getSimpleName();
+
+                ParameterParser<?> parameterParser = environment.getParserRegistry().get(parameterType);
+                if (parameterParser != null) {
+                    parameterSyntax = parameterParser.friendlyName();
+                }
+                syntaxBuilder.append("<").append(parameterSyntax).append(">").append(" ");
+            }
+            String syntax = syntaxBuilder.toString();
+            if (syntax.endsWith(" ")) {
+                syntax = syntax.substring(0, syntax.length() - 1);
+            }
+            commandSyntax = new CommandSyntax(syntax, permission);
+        } else {
+            commandSyntax = new CommandSyntax(usage, permission);
         }
-        String syntax = syntaxBuilder.toString();
-        if (syntax.endsWith(" ")) {
-            syntax = syntax.substring(0, syntax.length() - 1);
-        }
-        CommandSyntax commandSyntax = new CommandSyntax(syntax, permission);
 
         return new MethodMeta(permission, async, subCommand, concatenating, order, method, parameterIndex, commandSyntax);
     }
