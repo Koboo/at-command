@@ -3,3 +3,18 @@ dependencies {
 
     implementation project(':core-at-command')
 }
+
+task buildPlugin(type: Copy) {
+    var outputDir = rootProject.projectDir.getAbsolutePath() + "/output/plugins/"
+    var jarName = project.name + "-${projectVersion}-all.jar"
+    // Delete previous build jar
+    delete outputDir + jarName
+
+    // Copy current build jar
+    from 'build/libs/'
+    into outputDir
+
+    include jarName
+}
+
+shadowJar.finalizedBy buildPlugin
