@@ -395,6 +395,20 @@ public abstract class CommandEnvironment implements Environment {
         for (MethodMeta methodMeta : meta.getSubCommandMetaList()) {
             syntaxList.add(methodMeta.getSyntax());
         }
+        if (meta.getDefaultMeta() != null) {
+            MethodMeta defaultMeta = meta.getDefaultMeta();
+            syntaxList.add(new CommandSyntax("", defaultMeta.getPermission()));
+        }
+        MethodMeta helpMeta = null;
+        if (meta.getHelpMeta() != null) {
+            helpMeta = meta.getHelpMeta();
+        }
+        if (globalCommandMeta != null && globalCommandMeta.getHelpMeta() != null) {
+            helpMeta = globalCommandMeta.getHelpMeta();
+        }
+        if(helpMeta != null) {
+            syntaxList.add(new CommandSyntax("help", null));
+        }
         CommandHelp help = new CommandHelp(label, syntaxList);
         return callHelp(command, meta, sender, help);
     }
