@@ -56,8 +56,7 @@ subprojects {
         filter {
             it.replace('PROJECT_VERSION': "${projectVersion}".toString())
                     .replace('PROJECT_NAME': project.name)
-                    .replace('BUNGEE_MAIN': "${bungeeMain}")
-                    .replace('BUKKIT_MAIN': "${bukkitMain}")
+                    .replace('PROJECT_MAIN': "${pluginMain}")
         }
     }
 

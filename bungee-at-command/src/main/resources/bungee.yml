@@ -1,4 +1,4 @@
 name: PROJECT_NAME
 version: PROJECT_VERSION
 author: Binflux Development
-main: BUNGEE_MAIN
+main: PROJECT_MAIN

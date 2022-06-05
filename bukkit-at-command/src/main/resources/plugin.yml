@@ -1,6 +1,6 @@
 name: PROJECT_NAME
 version: PROJECT_VERSION
 author: Binflux Development
-main: BUKKIT_MAIN
+main: PROJECT_MAIN
 load: STARTUP
 commands:
