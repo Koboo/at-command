@@ -133,7 +133,6 @@ public class CommandResolver {
                 notAPlayerMeta, subCommandMetaList, isGlobalCommand, showHelpOnError, showHelpWithError);
     }
 
-
     public MethodMeta resolveMeta(Class<?> commandClass, Method method) throws InvalidCommandException {
         // Parse permission by @Access
         String permission = null;
