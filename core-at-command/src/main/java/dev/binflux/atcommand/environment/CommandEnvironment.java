@@ -406,7 +406,7 @@ public abstract class CommandEnvironment implements Environment {
         if (globalCommandMeta != null && globalCommandMeta.getHelpMeta() != null) {
             helpMeta = globalCommandMeta.getHelpMeta();
         }
-        if(helpMeta != null) {
+        if (helpMeta != null) {
             syntaxList.add(new CommandSyntax("help", null));
         }
         CommandHelp help = new CommandHelp(label, syntaxList);
@@ -477,15 +477,11 @@ public abstract class CommandEnvironment implements Environment {
                         completions.add(alias);
                     }
                 }
-                /*
                 // If the string is like "/command", just continue to next command
-                if(!commandString.endsWith(" ")) {
-                    continue;
-                }
-                */
+                continue;
             }
             String labelWithoutSlash = label.substring(1);
-            if(!meta.getAliasList().contains(labelWithoutSlash)) {
+            if (!meta.getAliasList().contains(labelWithoutSlash)) {
                 continue;
             }
 
@@ -497,10 +493,13 @@ public abstract class CommandEnvironment implements Environment {
             for (MethodMeta methodMeta : meta.getSubCommandMetaList()) {
 
                 // Some debug logs.
-//                Debug.println("Method: " + methodMeta.getMethod().getName());
+                System.out.println("Method: " + methodMeta.getMethod().getName());
 
                 // Get metaArguments and get expectedLength of arguments for the method
                 String[] metaArgs = methodMeta.getSubCommand().split(" ");
+                if (methodMeta.getSubCommand().equalsIgnoreCase("")) {
+                    metaArgs = new String[]{};
+                }
                 int expectedLength = metaArgs.length + methodMeta.getParameterIndex().size() - 1;
 
                 // If we got no arguments we return a emptyList.
@@ -519,33 +518,27 @@ public abstract class CommandEnvironment implements Environment {
                 }
 
                 // Some debug logs.
-//                Debug.println("ExpectedLength: " + expectedLength);
-//                Debug.println("MetaLength: " + metaArgs.length);
-//                Debug.println("StartIndex: " + paramStartIndex);
-//                Debug.println("Index: " + index);
-
+                System.out.println("ExpectedLength: " + expectedLength);
+                System.out.println("MetaLength: " + metaArgs.length);
 
                 // Create the expected index of the argument
-                int index;
-                String argument;
-                if(commandString.endsWith(" ")) {
-                    index = arguments.length;
-                    argument = null;
-                } else {
-                    index = arguments.length - 1;
-                    argument = arguments[index];
+                int currentIndex = commandString.endsWith(" ") ? arguments.length : arguments.length - 1;
+
+                // Get the last argument if command doesn't end with a space
+                String argument = null;
+                if (!commandString.endsWith(" ") && (arguments.length - 1) >= 0) {
+                    argument = arguments[currentIndex].toLowerCase(Locale.ROOT);
                 }
 
                 // Get the index on which the parameters of the method start
                 int paramStartIndex = metaArgs.length + 1;
-                // Get the last argument if command doesn't end with a space
-                if (argument != null) {
-                    argument = argument.toLowerCase(Locale.ROOT);
-                }
 
+                System.out.println("StartIndex: " + paramStartIndex);
+                System.out.println("Index: " + currentIndex);
                 // Check if argumentIndex exceeds our metaArguments
-                if ((metaArgs.length - 1) >= index) {
-                    String metaArgument = metaArgs[index].toLowerCase(Locale.ROOT);
+                if (metaArgs.length > 0 && (metaArgs.length - 1) >= currentIndex) {
+                    System.out.println("MetaArgs: " + metaArgs.length);
+                    String metaArgument = metaArgs[currentIndex].toLowerCase(Locale.ROOT);
                     if (argument == null || metaArgument.startsWith(argument)) {
                         if (!completions.contains(metaArgument) && !metaArgument.equalsIgnoreCase(argument)) {
                             completions.add(metaArgument);
@@ -560,7 +553,7 @@ public abstract class CommandEnvironment implements Environment {
                 }
 
                 // Check if argumentIndex exceeds our parameter start index
-                if (paramStartIndex >= index) {
+                if (paramStartIndex >= currentIndex) {
                     // Get the correct parameter index by subtracting the metaArgs length
                     // We don't need a '-1' here, because we ignore the sender parameter
                     int paramIndex = paramStartIndex - metaArgs.length;
