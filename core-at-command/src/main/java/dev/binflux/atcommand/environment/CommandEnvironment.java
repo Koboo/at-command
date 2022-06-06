@@ -493,7 +493,7 @@ public abstract class CommandEnvironment implements Environment {
             for (MethodMeta methodMeta : meta.getSubCommandMetaList()) {
 
                 // Some debug logs.
-                System.out.println("Method: " + methodMeta.getMethod().getName());
+                //System.out.println("Method: " + methodMeta.getMethod().getName());
 
                 // Get metaArguments and get expectedLength of arguments for the method
                 String[] metaArgs = methodMeta.getSubCommand().split(" ");
@@ -518,8 +518,8 @@ public abstract class CommandEnvironment implements Environment {
                 }
 
                 // Some debug logs.
-                System.out.println("ExpectedLength: " + expectedLength);
-                System.out.println("MetaLength: " + metaArgs.length);
+                //System.out.println("ExpectedLength: " + expectedLength);
+                //System.out.println("MetaLength: " + metaArgs.length);
 
                 // Create the expected index of the argument
                 int currentIndex = commandString.endsWith(" ") ? arguments.length : arguments.length - 1;
@@ -533,11 +533,10 @@ public abstract class CommandEnvironment implements Environment {
                 // Get the index on which the parameters of the method start
                 int paramStartIndex = metaArgs.length + 1;
 
-                System.out.println("StartIndex: " + paramStartIndex);
-                System.out.println("Index: " + currentIndex);
+                //System.out.println("StartIndex: " + paramStartIndex);
+                //System.out.println("Index: " + currentIndex);
                 // Check if argumentIndex exceeds our metaArguments
                 if (metaArgs.length > 0 && (metaArgs.length - 1) >= currentIndex) {
-                    System.out.println("MetaArgs: " + metaArgs.length);
                     String metaArgument = metaArgs[currentIndex].toLowerCase(Locale.ROOT);
                     if (argument == null || metaArgument.startsWith(argument)) {
                         if (!completions.contains(metaArgument) && !metaArgument.equalsIgnoreCase(argument)) {
