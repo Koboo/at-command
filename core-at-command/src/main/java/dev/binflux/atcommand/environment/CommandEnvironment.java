@@ -467,21 +467,28 @@ public abstract class CommandEnvironment implements Environment {
             }
 
             // If the argument length is zero, we can only complete command aliases
-            if (arguments.length == 0) {
+            // But only if we got no space at the end.
+            if (arguments.length == 0 && !commandString.endsWith(" ")) {
+                // Otherwise we check and print aliases
                 for (String alias : meta.getAliasList()) {
                     alias = "/" + alias;
+                    // Check if we found any alias
                     if (alias.startsWith(label) && !completions.contains(alias) && !alias.equalsIgnoreCase(label)) {
                         completions.add(alias);
                     }
                 }
-                if (!commandString.endsWith(" ")) {
+                /*
+                // If the string is like "/command", just continue to next command
+                if(!commandString.endsWith(" ")) {
                     continue;
                 }
+                */
             }
-            // Only show subcommands of the typed command
-            if (!meta.getAliasList().contains(label.toLowerCase(Locale.ROOT))) {
+            String labelWithoutSlash = label.substring(1);
+            if(!meta.getAliasList().contains(labelWithoutSlash)) {
                 continue;
             }
+            //Fix no aliases completion
 
             // Continue if no subcommands found
             if (meta.getSubCommandMetaList().isEmpty()) {
@@ -512,20 +519,27 @@ public abstract class CommandEnvironment implements Environment {
                     continue;
                 }
 
-                // Create the needed index of the argument
-                int index = commandString.endsWith(" ") ? arguments.length : arguments.length - 1;
-
-                // Get the index on which the parameters of the method start
-                int paramStartIndex = metaArgs.length + 1;
-
                 // Some debug logs.
 //                Debug.println("ExpectedLength: " + expectedLength);
 //                Debug.println("MetaLength: " + metaArgs.length);
 //                Debug.println("StartIndex: " + paramStartIndex);
 //                Debug.println("Index: " + index);
 
+
+                // Create the expected index of the argument
+                int index;
+                String argument;
+                if(commandString.endsWith(" ")) {
+                    index = arguments.length;
+                    argument = null;
+                } else {
+                    index = arguments.length - 1;
+                    argument = arguments[index];
+                }
+
+                // Get the index on which the parameters of the method start
+                int paramStartIndex = metaArgs.length + 1;
                 // Get the last argument if command doesn't end with a space
-                String argument = commandString.endsWith(" ") ? null : arguments[index];
                 if (argument != null) {
                     argument = argument.toLowerCase(Locale.ROOT);
                 }
