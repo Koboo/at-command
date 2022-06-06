@@ -488,7 +488,6 @@ public abstract class CommandEnvironment implements Environment {
             if(!meta.getAliasList().contains(labelWithoutSlash)) {
                 continue;
             }
-            //Fix no aliases completion
 
             // Continue if no subcommands found
             if (meta.getSubCommandMetaList().isEmpty()) {
@@ -505,7 +504,7 @@ public abstract class CommandEnvironment implements Environment {
                 int expectedLength = metaArgs.length + methodMeta.getParameterIndex().size() - 1;
 
                 // If we got no arguments we return a emptyList.
-                if (expectedLength == 0) {
+                if (expectedLength <= 0) {
                     return Collections.emptyList();
                 }
 
