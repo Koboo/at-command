@@ -152,6 +152,10 @@ public class CommandResolver {
         // Get parameter types and index of method
         Map<Integer, Class<?>> parameterIndex = new HashMap<>();
         for (Parameter parameter : method.getParameters()) {
+            if(parameter.getType().isPrimitive()) {
+                throw new InvalidCommandException(className + " method " + methodName +
+                        " has a primitive type of " + parameter.getType().getName() + " but it's not allowed!");
+            }
             parameterIndex.put(parameterIndex.size(), parameter.getType());
         }
         if (parameterIndex.isEmpty()) {
@@ -160,7 +164,7 @@ public class CommandResolver {
 
         // Check default method should only have one argument
         if (method.isAnnotationPresent(Default.class) && parameterIndex.size() != 1) {
-            throw new InvalidCommandException(className + " method " + methodName + " with @Default can only have one sender parameter.");
+            throw new InvalidCommandException(className + " method " + methodName + " with @Default can only have one parameter of the desired sender.");
         }
 
         // Specific method shouldn't have Sub annotation
