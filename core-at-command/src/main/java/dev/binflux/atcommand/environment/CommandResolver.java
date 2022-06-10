@@ -126,11 +126,10 @@ public class CommandResolver {
             }
         }
 
-        boolean showHelpOnError = commandClass.isAnnotationPresent(ShowHelpOnError.class);
         boolean showHelpWithError = commandClass.isAnnotationPresent(ShowHelpWithError.class);
 
         return new CommandMeta(aliasList, rootPermission, defaultMeta, helpMeta, noPermissionMeta, errorMeta,
-                notAPlayerMeta, subCommandMetaList, isGlobalCommand, showHelpOnError, showHelpWithError);
+                notAPlayerMeta, subCommandMetaList, isGlobalCommand, showHelpWithError);
     }
 
     public MethodMeta resolveMeta(Class<?> commandClass, Method method) throws InvalidCommandException {

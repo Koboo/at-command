@@ -289,9 +289,7 @@ public abstract class CommandEnvironment implements Environment {
                         parameterList.add(parameterParser.parse(argumentParam));
 
                     } catch (ParameterException exc) {
-                        if (meta.isShowHelpOnError()) {
-                            return callHelpSubCommand(sender, label, command, meta, methodMeta);
-                        } else if (meta.getErrorMeta() != null) {
+                        if (meta.getErrorMeta() != null) {
                             if (meta.isShowHelpWithError()) {
                                 callHelpSubCommand(sender, label, command, meta, methodMeta);
                             }
