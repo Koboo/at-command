@@ -412,7 +412,9 @@ public abstract class CommandEnvironment implements Environment {
             for (MethodMeta methodMeta : meta.getSubCommandMetaList()) {
 
                 // Some debug logs.
-                //System.out.println("Method: " + methodMeta.getMethod().getName());
+                System.out.println("=====================");
+                System.out.println("Method: " + methodMeta.getMethod().getName());
+                System.out.println("ArgsLength: " + arguments.length);
 
                 // Get metaArguments and get expectedLength of arguments for the method
                 String[] metaArgs = methodMeta.getSubCommand().split(" ");
@@ -449,11 +451,7 @@ public abstract class CommandEnvironment implements Environment {
                     argument = arguments[currentIndex].toLowerCase(Locale.ROOT);
                 }
 
-                // Get the index on which the parameters of the method start
-                int paramStartIndex = metaArgs.length + 1;
-
-                //System.out.println("StartIndex: " + paramStartIndex);
-                //System.out.println("Index: " + currentIndex);
+                //System.out.println("CurrIndex: " + currentIndex);
                 // Check if argumentIndex exceeds our metaArguments
                 if (metaArgs.length > 0 && (metaArgs.length - 1) >= currentIndex) {
                     String metaArgument = metaArgs[currentIndex].toLowerCase(Locale.ROOT);
@@ -470,14 +468,28 @@ public abstract class CommandEnvironment implements Environment {
                     continue;
                 }
 
+                // Get the index on which the parameters of the method start
+                int paramStartIndex = metaArgs.length + 1;
+
+                //System.out.println("ParamStartIndex: " + paramStartIndex);
+
                 // Check if argumentIndex exceeds our parameter start index
                 if (paramStartIndex >= currentIndex) {
                     // Get the correct parameter index by subtracting the metaArgs length
                     // We don't need a '-1' here, because we ignore the sender parameter
-                    int paramIndex = paramStartIndex - metaArgs.length;
+                    int paramIndex = arguments.length - metaArgs.length;
+                    if(commandString.endsWith(" ")) {
+                        paramIndex += 1;
+                    }
 
+                    //System.out.println("CurrParamIndex: " + paramIndex);
                     // Get the completions of the defined parameter-parser
-                    Class<?> paramType = methodMeta.getMethod().getParameterTypes()[paramIndex];
+                    Class<?>[] parameterTypes = methodMeta.getMethod().getParameterTypes();
+                    //System.out.println("ParamSize: " + parameterTypes.length);
+                    if ((parameterTypes.length - 1) < paramIndex) {
+                        continue;
+                    }
+                    Class<?> paramType = parameterTypes[paramIndex];
                     ParameterParser<?> parameterParser = parserRegistry.get(paramType);
                     if (parameterParser == null) {
                         continue;
@@ -485,11 +497,8 @@ public abstract class CommandEnvironment implements Environment {
                     // Handle parameter completions
                     List<String> paramCompletions = parameterParser.complete(argument);
                     for (String paramArg : paramCompletions) {
-                        paramArg = paramArg.toLowerCase(Locale.ROOT);
-                        if (argument == null || paramArg.startsWith(argument)) {
-                            if (!completions.contains(paramArg)) {
-                                completions.add(paramArg);
-                            }
+                        if (!completions.contains(paramArg)) {
+                            completions.add(paramArg);
                         }
                     }
                 }
