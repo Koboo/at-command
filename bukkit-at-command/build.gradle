@@ -6,7 +6,7 @@ dependencies {
 }
 
 task buildPlugin(type: Copy) {
-    var outputDir = rootProject.projectDir.getAbsolutePath() + "/output/plugins/"
+    var outputDir = rootProject.projectDir.getAbsolutePath() + "/output/"
     var jarName = project.name + "-${projectVersion}-all.jar"
     // Delete previous build jar
     delete outputDir + jarName
