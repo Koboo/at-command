@@ -412,9 +412,9 @@ public abstract class CommandEnvironment implements Environment {
             for (MethodMeta methodMeta : meta.getSubCommandMetaList()) {
 
                 // Some debug logs.
-                System.out.println("=====================");
-                System.out.println("Method: " + methodMeta.getMethod().getName());
-                System.out.println("ArgsLength: " + arguments.length);
+                //System.out.println("=====================");
+                //System.out.println("Method: " + methodMeta.getMethod().getName());
+                //System.out.println("ArgsLength: " + arguments.length);
 
                 // Get metaArguments and get expectedLength of arguments for the method
                 String[] metaArgs = methodMeta.getSubCommand().split(" ");
@@ -433,7 +433,7 @@ public abstract class CommandEnvironment implements Environment {
                     continue;
                 }
 
-                // Continue if we only got a concating message
+                // Continue if we only got a non-concatenating message
                 if (methodMeta.isConcatenating()) {
                     continue;
                 }
@@ -453,6 +453,24 @@ public abstract class CommandEnvironment implements Environment {
 
                 //System.out.println("CurrIndex: " + currentIndex);
                 // Check if argumentIndex exceeds our metaArguments
+                int metaLength = metaArgs.length;
+                if(metaLength > 0 && commandString.endsWith(" ")) {
+                    boolean skipSubCommand = false;
+                    for(int i = 0; i < metaLength; i++) {
+                        String metaArgument = metaArgs[i];
+                        if(arguments.length >= metaLength) {
+                            String passedArgument = arguments[i];
+                            if (!passedArgument.equalsIgnoreCase(metaArgument)) {
+                                skipSubCommand = true;
+                                break;
+                            }
+                        }
+                    }
+                    if(skipSubCommand) {
+                        continue;
+                    }
+                }
+
                 if (metaArgs.length > 0 && (metaArgs.length - 1) >= currentIndex) {
                     String metaArgument = metaArgs[currentIndex].toLowerCase(Locale.ROOT);
                     if (argument == null || metaArgument.startsWith(argument)) {
