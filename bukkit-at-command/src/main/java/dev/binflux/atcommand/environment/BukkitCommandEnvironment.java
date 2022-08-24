@@ -2,7 +2,6 @@ package dev.binflux.atcommand.environment;
 
 import dev.binflux.atcommand.parser.GameModeParser;
 import dev.binflux.atcommand.parser.WorldParser;
-
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.SimpleCommandMap;

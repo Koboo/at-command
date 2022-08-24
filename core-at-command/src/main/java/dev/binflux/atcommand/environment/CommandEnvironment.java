@@ -1,17 +1,14 @@
 package dev.binflux.atcommand.environment;
 
-import dev.binflux.atcommand.annotations.command.*;
-import dev.binflux.atcommand.annotations.method.*;
-import dev.binflux.atcommand.annotations.options.*;
-import dev.binflux.atcommand.environment.meta.*;
-import dev.binflux.atcommand.environment.utilities.OrderComparator;
-import dev.binflux.atcommand.exceptions.*;
+import dev.binflux.atcommand.environment.meta.CommandMeta;
+import dev.binflux.atcommand.environment.meta.CommandSyntax;
+import dev.binflux.atcommand.environment.meta.MethodMeta;
+import dev.binflux.atcommand.exceptions.InvalidCommandException;
+import dev.binflux.atcommand.exceptions.ParameterException;
 import dev.binflux.atcommand.parser.ParameterParser;
 import dev.binflux.atcommand.parser.types.*;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.*;
 
 public abstract class CommandEnvironment implements Environment {
@@ -215,12 +212,12 @@ public abstract class CommandEnvironment implements Environment {
                                 callHelpSubCommand(sender, label, command, meta, methodMeta);
                             }
                             if (globalCommandMeta != null && globalCommandMeta.getHelpMeta() != null) {
-                                if (handleSenderType(globalCommand, globalCommandMeta, sender, globalCommandMeta.getErrorMeta())) {
+                                if (isWrongSender(globalCommand, globalCommandMeta, sender, globalCommandMeta.getErrorMeta())) {
                                     return true;
                                 }
                                 globalCommandMeta.getErrorMeta().getMethod().invoke(globalCommand, sender, exc.getMessage());
                             }
-                            if (handleSenderType(command, meta, sender, meta.getErrorMeta())) {
+                            if (isWrongSender(command, meta, sender, meta.getErrorMeta())) {
                                 return true;
                             }
                             meta.getErrorMeta().getMethod().invoke(command, sender, exc.getMessage());
@@ -245,7 +242,7 @@ public abstract class CommandEnvironment implements Environment {
                 }
 
 //                System.out.println("InvokingLength: " + parameterList.size());
-                if (handleSenderType(command, meta, sender, methodMeta)) {
+                if (isWrongSender(command, meta, sender, methodMeta)) {
                     return true;
                 }
 //                System.out.println("Invoked method: " + methodMeta.getMethod().getName());
@@ -259,7 +256,7 @@ public abstract class CommandEnvironment implements Environment {
         return false;
     }
 
-    private <T> boolean handleSenderType(Object command, CommandMeta meta, T sender, MethodMeta methodMeta)
+    private <T> boolean isWrongSender(Object command, CommandMeta meta, T sender, MethodMeta methodMeta)
             throws InvocationTargetException, IllegalAccessException {
         Class<?> expectedSender = methodMeta.getMethod().getParameterTypes()[0];
         Class<?> objectSender = sender.getClass();
@@ -267,11 +264,10 @@ public abstract class CommandEnvironment implements Environment {
             if (meta.getWrongSenderMeta() != null) {
                 meta.getWrongSenderMeta().getMethod().invoke(command, sender);
                 return true;
-            } else {
-                if (globalCommandMeta != null && globalCommandMeta.getHelpMeta() != null) {
-                    globalCommandMeta.getWrongSenderMeta().getMethod().invoke(globalCommand, sender);
-                    return true;
-                }
+            }
+            if (globalCommandMeta != null && globalCommandMeta.getHelpMeta() != null) {
+                globalCommandMeta.getWrongSenderMeta().getMethod().invoke(globalCommand, sender);
+                return true;
             }
         }
         return false;
@@ -281,7 +277,7 @@ public abstract class CommandEnvironment implements Environment {
             throws InvocationTargetException, IllegalAccessException {
         if (meta.getHelpMeta() == null) {
             if (globalCommandMeta != null && globalCommandMeta.getHelpMeta() != null) {
-                if (handleSenderType(globalCommand, globalCommandMeta, sender, globalCommandMeta.getHelpMeta())) {
+                if (isWrongSender(globalCommand, globalCommandMeta, sender, globalCommandMeta.getHelpMeta())) {
                     return true;
                 }
                 globalCommandMeta.getHelpMeta().getMethod().invoke(globalCommand, sender, commandHelp);
@@ -289,7 +285,7 @@ public abstract class CommandEnvironment implements Environment {
             }
             return false;
         }
-        if (handleSenderType(command, meta, sender, meta.getHelpMeta())) {
+        if (isWrongSender(command, meta, sender, meta.getHelpMeta())) {
             return true;
         }
         meta.getHelpMeta().getMethod().invoke(command, sender, commandHelp);
@@ -301,7 +297,7 @@ public abstract class CommandEnvironment implements Environment {
         if (meta.getDefaultMeta() == null) {
             return callHelpAllSubcommands(sender, label, command, meta);
         }
-        if (handleSenderType(command, meta, sender, meta.getDefaultMeta())) {
+        if (isWrongSender(command, meta, sender, meta.getDefaultMeta())) {
             return true;
         }
         meta.getDefaultMeta().getMethod().invoke(command, sender);
@@ -344,7 +340,7 @@ public abstract class CommandEnvironment implements Environment {
             throws InvocationTargetException, IllegalAccessException {
         if (meta.getNoPermissionMeta() == null) {
             if (globalCommandMeta != null && globalCommandMeta.getHelpMeta() != null) {
-                if (handleSenderType(globalCommand, globalCommandMeta, sender, globalCommandMeta.getNoPermissionMeta())) {
+                if (isWrongSender(globalCommand, globalCommandMeta, sender, globalCommandMeta.getNoPermissionMeta())) {
                     return true;
                 }
                 globalCommandMeta.getNoPermissionMeta().getMethod().invoke(globalCommand, sender, permission, commandString);
@@ -352,7 +348,7 @@ public abstract class CommandEnvironment implements Environment {
             }
             return false;
         }
-        if (handleSenderType(command, meta, sender, meta.getNoPermissionMeta())) {
+        if (isWrongSender(command, meta, sender, meta.getNoPermissionMeta())) {
             return true;
         }
         meta.getNoPermissionMeta().getMethod().invoke(command, sender, permission, commandString);
@@ -454,11 +450,11 @@ public abstract class CommandEnvironment implements Environment {
                 //System.out.println("CurrIndex: " + currentIndex);
                 // Check if argumentIndex exceeds our metaArguments
                 int metaLength = metaArgs.length;
-                if(metaLength > 0 && commandString.endsWith(" ")) {
+                if (metaLength > 0 && commandString.endsWith(" ")) {
                     boolean skipSubCommand = false;
-                    for(int i = 0; i < metaLength; i++) {
+                    for (int i = 0; i < metaLength; i++) {
                         String metaArgument = metaArgs[i];
-                        if(arguments.length >= metaLength) {
+                        if (arguments.length >= metaLength) {
                             String passedArgument = arguments[i];
                             if (!passedArgument.equalsIgnoreCase(metaArgument)) {
                                 skipSubCommand = true;
@@ -466,7 +462,7 @@ public abstract class CommandEnvironment implements Environment {
                             }
                         }
                     }
-                    if(skipSubCommand) {
+                    if (skipSubCommand) {
                         continue;
                     }
                 }
@@ -496,7 +492,7 @@ public abstract class CommandEnvironment implements Environment {
                     // Get the correct parameter index by subtracting the metaArgs length
                     // We don't need a '-1' here, because we ignore the sender parameter
                     int paramIndex = arguments.length - metaArgs.length;
-                    if(commandString.endsWith(" ")) {
+                    if (commandString.endsWith(" ")) {
                         paramIndex += 1;
                     }
 

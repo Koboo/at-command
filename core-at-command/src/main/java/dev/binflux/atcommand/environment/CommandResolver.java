@@ -1,6 +1,8 @@
 package dev.binflux.atcommand.environment;
 
-import dev.binflux.atcommand.annotations.command.*;
+import dev.binflux.atcommand.annotations.command.Alias;
+import dev.binflux.atcommand.annotations.command.Global;
+import dev.binflux.atcommand.annotations.command.ShowHelpWithError;
 import dev.binflux.atcommand.annotations.method.*;
 import dev.binflux.atcommand.annotations.options.Access;
 import dev.binflux.atcommand.annotations.options.Async;

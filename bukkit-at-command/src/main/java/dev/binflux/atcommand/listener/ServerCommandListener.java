@@ -1,9 +1,7 @@
 package dev.binflux.atcommand.listener;
 
 import dev.binflux.atcommand.environment.BukkitCommandEnvironment;
-
 import lombok.RequiredArgsConstructor;
-
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
