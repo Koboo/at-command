@@ -3,11 +3,13 @@ package dev.binflux.atcommand.environment;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.bukkit.Server;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.SimpleCommandMap;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Map;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BukkitCommandMap extends SimpleCommandMap {
@@ -17,6 +19,10 @@ public class BukkitCommandMap extends SimpleCommandMap {
     public BukkitCommandMap(Server server, BukkitCommandEnvironment environment) {
         super(server);
         this.environment = environment;
+    }
+
+    protected void registerOldCommands(Map<String, Command> oldCommands) {
+        this.knownCommands.putAll(oldCommands);
     }
 
     @Override
