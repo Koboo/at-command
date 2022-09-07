@@ -1,15 +1,15 @@
 package dev.binflux.atcommand.environment.meta;
 
-public record CommandSyntax(String syntax, String permission) {
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.experimental.FieldDefaults;
 
-    @Deprecated
-    public String getSyntax() {
-        return syntax;
-    }
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Getter
+public class CommandSyntax {
 
-    @Deprecated
-    public String getPermission() {
-        return permission;
-    }
-
+    String syntax;
+    String permission;
 }

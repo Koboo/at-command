@@ -19,7 +19,6 @@ public class GameModeParser extends ParameterParser<GameMode> {
         throw new ParameterException(value + " is not valid gameMode.");
     }
 
-    @SuppressWarnings("all")
     private boolean isGameMode(GameMode gameMode, String value) {
         if(value.equalsIgnoreCase(gameMode.name().toLowerCase(Locale.ROOT))) {
             return true;

@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 plugins {
     id 'java'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
@@ -20,19 +22,8 @@ subprojects {
             url 'https://oss.sonatype.org/content/repositories/snapshots'
         }
         maven {
-            name 'koboo-public-repo'
-            url 'https://repo.koboo.eu/releases'
-        }
-        maven {
-            name 'koboo-private-repo'
-            url 'https://repo.koboo.eu/binflux'
-            credentials {
-                username System.getenv('REPO_USER')
-                password System.getenv('REPO_TOKEN')
-            }
-        }
-        maven {
-            url "https://repo.dmulloy2.net/repository/public/"
+            name 'spigot-repo'
+            url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
         }
     }
 
@@ -42,22 +33,26 @@ subprojects {
     }
 
     compileJava.options.encoding = 'UTF-8'
-
     tasks.withType(JavaCompile) {
         options.encoding = 'UTF-8'
     }
 
     java {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     processResources {
-        filter {
-            it.replace('PROJECT_VERSION': "${projectVersion}".toString())
-                    .replace('PROJECT_NAME': project.name)
-                    .replace('PROJECT_MAIN': "${pluginMain}")
-        }
+        filter ReplaceTokens, tokens: [
+            "PROJECT_VERSION": "${projectVersion}".toString(),
+            "PROJECT_NAME": project.name.toString(),
+            "PLUGIN_AUTHOR": "${pluginAuthor}".toString(),
+            "PLUGIN_MAIN": "${pluginMain}".toString()
+        ]
+    }
+
+    task createPluginFile {
+        def template
     }
 
     publishing {

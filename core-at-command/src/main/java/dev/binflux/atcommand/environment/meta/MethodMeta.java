@@ -1,25 +1,25 @@
 package dev.binflux.atcommand.environment.meta;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.experimental.FieldDefaults;
 
 import java.lang.reflect.Method;
 import java.util.Map;
 
-@Getter
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Getter
 public class MethodMeta {
 
-    private final String permission;
-    private final boolean async;
-    private final String subCommand;
-    private final boolean concatenating;
-    private final int order;
-    private final Method method;
-    private final Map<Integer, Class<?>> parameterIndex;
-    private final CommandSyntax syntax;
+    String permission;
+    boolean async;
+    String subCommand;
+    boolean concatenating;
+    int order;
+    Method method;
+    Map<Integer, Class<?>> parameterIndex;
+    CommandSyntax syntax;
 
-    public boolean hasPermission() {
-        return permission != null;
-    }
 }

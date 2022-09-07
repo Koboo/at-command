@@ -1,4 +1,4 @@
 rootProject.name = 'at-command'
 include 'core-at-command'
 include 'bungee-at-command'
-include 'bukkit-at-command'
+include 'bukkit-at-command-1_8'

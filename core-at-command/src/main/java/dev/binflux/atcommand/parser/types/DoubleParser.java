@@ -10,7 +10,7 @@ public class DoubleParser extends ParameterParser<Double> {
         try {
             return Double.valueOf(value);
         } catch (NumberFormatException e) {
-            throw new ParameterException(value + " is not a valid number!");
+            throw new ParameterException(value + " is not a valid number (java.lang.Double)!");
         }
     }
 

@@ -14,7 +14,8 @@ public abstract class ParameterParser<T> {
         if(getType().isEnum()) {
             StringBuilder enumBuilder = new StringBuilder();
             for (T enumConstant : getType().getEnumConstants()) {
-                if(enumConstant instanceof Enum<?> anEnum) {
+                if(enumConstant instanceof Enum<?>) {
+                    Enum<?> anEnum = (Enum<?>) enumConstant;
                     enumBuilder.append(anEnum.name()).append(" | ");
                 }
             }

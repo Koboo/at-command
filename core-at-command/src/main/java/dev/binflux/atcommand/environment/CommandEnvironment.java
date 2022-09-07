@@ -37,6 +37,7 @@ public abstract class CommandEnvironment implements Environment {
         parserRegistry = new HashMap<>();
 
         registerParser(new BooleanParser());
+        registerParser(new DateParser());
         registerParser(new DoubleParser());
         registerParser(new FloatParser());
         registerParser(new IntegerParser());

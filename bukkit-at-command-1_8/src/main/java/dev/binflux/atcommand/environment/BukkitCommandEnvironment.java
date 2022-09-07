@@ -3,6 +3,8 @@ package dev.binflux.atcommand.environment;
 import dev.binflux.atcommand.parser.GameModeParser;
 import dev.binflux.atcommand.parser.WorldParser;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.SimpleCommandMap;
@@ -15,10 +17,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 @SuppressWarnings("all")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class BukkitCommandEnvironment extends CommandEnvironment {
 
-    private final JavaPlugin plugin;
-    private BukkitCommandMap commandMap;
+    final JavaPlugin plugin;
+    BukkitCommandMap commandMap;
 
     public BukkitCommandEnvironment(JavaPlugin plugin) {
         this.plugin = plugin;
