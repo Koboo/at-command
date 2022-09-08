@@ -58,21 +58,17 @@ public abstract class CommandEnvironment implements Environment {
         Class<?> commandClass = command.getClass();
 
         try {
-            CommandMeta meta = commandResolver.resolveCommand(commandClass);
-            if (meta.isGlobalCommand()) {
+            CommandMeta commandMeta = commandResolver.resolveCommand(commandClass);
+            if (commandMeta.isGlobalCommand()) {
                 globalCommand = command;
-                globalCommandMeta = meta;
+                globalCommandMeta = commandMeta;
                 return;
             }
-            commandRegistry.put(command, meta);
-            afterRegistration(command, meta);
+            commandRegistry.put(command, commandMeta);
+            afterRegistration(command, commandMeta);
         } catch (InvalidCommandException e) {
             e.printStackTrace();
         }
-    }
-
-    public <T> void afterRegistration(T command, CommandMeta commandMeta) {
-        // Not used in every environment, so if needed override it.
     }
 
     public Map.Entry<Object, CommandMeta> getCommandMeta(String label) {
@@ -380,7 +376,6 @@ public abstract class CommandEnvironment implements Environment {
 
             // Create the command label
             String label = commandString.split(" ")[0].toLowerCase(Locale.ROOT);
-            //System.out.println("Label: " + label);
             String[] arguments = new String[]{};
             // If possible, we create the arguments as String[]
             if (commandString.length() > (label.length() + 1)) {

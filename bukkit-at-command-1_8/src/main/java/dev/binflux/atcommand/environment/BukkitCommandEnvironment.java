@@ -67,9 +67,6 @@ public class BukkitCommandEnvironment extends CommandEnvironment {
 
     @Override
     public <T> void afterRegistration(T command, CommandMeta commandMeta) {
-        if (commandMeta.isGlobalCommand()) {
-            return;
-        }
         List<String> aliasList = new ArrayList<>(commandMeta.getAliasList());
         String label = aliasList.get(0);
         aliasList.remove(0);
