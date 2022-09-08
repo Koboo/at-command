@@ -223,17 +223,17 @@ public abstract class CommandEnvironment implements Environment {
                     }
                 }
                 int parameterListLength = parameterList.size();
-                boolean wrongSyntax = false;
+                boolean hasMethodWrongParams = false;
                 for (int i = 0; i < parameterListLength; i++) {
                     Class<?> parameterListClass = parameterList.get(i).getClass();
                     Class<?> parameterIndexClass = methodMeta.getParameterIndex().get(i);
 //                    System.out.println("Check: " + parameterListClass.getName() + "|" + parameterIndexClass.getName());
                     if (!parameterIndexClass.isAssignableFrom(parameterListClass)) {
-                        wrongSyntax = true;
+                        hasMethodWrongParams = true;
                     }
                 }
 //                System.out.println("WrongSyntax: " + wrongSyntax);
-                if (wrongSyntax) {
+                if (hasMethodWrongParams) {
                     continue;
                 }
 
@@ -338,7 +338,7 @@ public abstract class CommandEnvironment implements Environment {
     private <T> boolean callNoPermission(Object command, CommandMeta meta, T sender, String permission, String commandString)
             throws InvocationTargetException, IllegalAccessException {
         if (meta.getNoPermissionMeta() == null) {
-            if (globalCommandMeta != null && globalCommandMeta.getHelpMeta() != null) {
+            if (globalCommandMeta != null && globalCommandMeta.getNoPermissionMeta() != null) {
                 if (handleSenderType(globalCommand, globalCommandMeta, sender, globalCommandMeta.getNoPermissionMeta())) {
                     return true;
                 }
