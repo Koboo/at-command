@@ -51,7 +51,6 @@ public class BukkitRootCommand extends Command {
             buffer.append(" ").append(arg);
         }
         String cmdLine = "/" + alias + buffer;
-        log.info("Tabcomplete: \"" + cmdLine + "\"");
         List<String> completions = environment.handleCompletions(sender, cmdLine, new ArrayList<>());
         completions.removeIf(comp -> comp.contains(":") || comp.equalsIgnoreCase(""));
 
@@ -73,9 +72,6 @@ public class BukkitRootCommand extends Command {
                                 .collect(Collectors.toList())
                 );
             }
-        }
-        for (String completion : completions) {
-            System.out.println("Complete: " + completion);
         }
         return completions;
     }
