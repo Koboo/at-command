@@ -7,6 +7,7 @@ import dev.binflux.atcommand.parser.ParameterParser;
 import dev.binflux.atcommand.parser.types.*;
 
 import java.lang.reflect.InvocationTargetException;
+import java.security.cert.Extension;
 import java.util.*;
 
 public abstract class CommandEnvironment implements Environment {
@@ -190,7 +191,7 @@ public abstract class CommandEnvironment implements Environment {
                         // Get parser and parse the argument, add that into list.
                         ParameterParser<?> parameterParser = parserRegistry.get(parameterType);
                         if (parameterParser == null) {
-                            throw new ParameterException("No parser found for type " + parameterType.getName() + ".");
+                            throw new ParameterException("No parser found! (type=" + parameterType.getName() + ")");
                         }
                         parameterList.add(parameterParser.parse(argumentParam));
 
@@ -239,20 +240,22 @@ public abstract class CommandEnvironment implements Environment {
                     return true;
                 }
 //                System.out.println("Invoked method: " + methodMeta.getMethod().getName());
-                try {
-                    methodMeta.getMethod().invoke(command, parameterList.toArray(new Object[]{}));
-                } catch (InvocationTargetException exc) {
-                    if(!(exc.getCause() instanceof ConditionException)) {
-                        exc.printStackTrace();
-                        return false;
-                    }
-                    sendSenderMessage(sender, exc.getCause().getMessage());
-                }
+                methodMeta.getMethod().invoke(command, parameterList.toArray(new Object[]{}));
                 return true;
             }
             return callHelpAllSubcommands(sender, label, command, meta);
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            if (!(e instanceof ConditionException) && !(e.getCause() instanceof ConditionException)) {
+                e.printStackTrace();
+                return false;
+            }
+            String message = null;
+            if(e instanceof ConditionException) {
+                message = e.getMessage();
+            } else if(e.getCause() instanceof ConditionException) {
+                message = e.getCause().getMessage();
+            }
+            sendSenderMessage(sender, message);
         }
         return false;
     }
