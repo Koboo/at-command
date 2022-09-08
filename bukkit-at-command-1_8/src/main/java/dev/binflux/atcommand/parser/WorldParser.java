@@ -1,7 +1,6 @@
 package dev.binflux.atcommand.parser;
 
 import dev.binflux.atcommand.exceptions.ParameterException;
-
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
