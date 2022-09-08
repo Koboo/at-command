@@ -9,6 +9,4 @@ public class Cond {
             throw new ConditionException(message);
         }
     }
-
-
 }
