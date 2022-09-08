@@ -2,8 +2,8 @@ package dev.binflux.atcommand;
 
 import dev.binflux.atcommand.annotations.command.Label;
 import dev.binflux.atcommand.annotations.command.ShowHelpWithError;
-import dev.binflux.atcommand.annotations.method.types.Default;
 import dev.binflux.atcommand.annotations.method.Subcommand;
+import dev.binflux.atcommand.annotations.method.types.Default;
 import dev.binflux.atcommand.conditions.Cond;
 import org.bukkit.entity.Player;
 

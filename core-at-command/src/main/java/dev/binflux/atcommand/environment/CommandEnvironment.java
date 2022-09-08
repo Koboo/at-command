@@ -1,13 +1,15 @@
 package dev.binflux.atcommand.environment;
 
-import dev.binflux.atcommand.conditions.Cond;
-import dev.binflux.atcommand.environment.meta.*;
-import dev.binflux.atcommand.exceptions.*;
+import dev.binflux.atcommand.environment.meta.CommandMeta;
+import dev.binflux.atcommand.environment.meta.CommandSyntax;
+import dev.binflux.atcommand.environment.meta.MethodMeta;
+import dev.binflux.atcommand.exceptions.ConditionException;
+import dev.binflux.atcommand.exceptions.InvalidCommandException;
+import dev.binflux.atcommand.exceptions.ParameterException;
 import dev.binflux.atcommand.parser.ParameterParser;
 import dev.binflux.atcommand.parser.types.*;
 
 import java.lang.reflect.InvocationTargetException;
-import java.security.cert.Extension;
 import java.util.*;
 
 public abstract class CommandEnvironment implements Environment {

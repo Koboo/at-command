@@ -1,10 +1,8 @@
 package dev.binflux.atcommand.listener;
 
 import dev.binflux.atcommand.environment.BukkitCommandEnvironment;
-
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-
 import lombok.experimental.FieldDefaults;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
