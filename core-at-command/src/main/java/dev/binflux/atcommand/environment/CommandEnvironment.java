@@ -45,9 +45,7 @@ public abstract class CommandEnvironment implements Environment {
 
     @Override
     public <T> void registerCommand(T command) {
-
         Class<?> commandClass = command.getClass();
-
         try {
             CommandMeta commandMeta = commandResolver.resolveCommand(commandClass);
             if (commandMeta.isGlobalCommand()) {
@@ -85,7 +83,7 @@ public abstract class CommandEnvironment implements Environment {
             parserRegistry.remove(parameterParser.getType());
         }
         if (parserRegistry.containsKey(parameterParser.getType())) {
-            throw new IllegalStateException(parameterParser.getClass().getName() + " is already registered in parserRegistry!");
+            throw new IllegalStateException(parameterParser.getClass().getName() + " is already registered in ParserRegistry!");
         }
         parserRegistry.put(parameterParser.getType(), parameterParser);
     }
@@ -112,10 +110,6 @@ public abstract class CommandEnvironment implements Environment {
                 arguments = commandString.substring(label.length() + 1).split(" ");
             }
 
-//            Debug.println("Length: " + arguments.length);
-//            Debug.println("Command: " + CommandHelp.buildCommand("", arguments));
-//            Debug.println("Subcommands: " + meta.getSubCommandMetaList().size());
-
             if (arguments.length == 0) {
                 return callDefault(label, command, meta, sender);
             }
@@ -129,14 +123,10 @@ public abstract class CommandEnvironment implements Environment {
 
                 String[] commandArguments = arguments;
 
-//                System.out.println("[]=====[ " + methodMeta.getMethod().getName() + " ]=====[]");
-
                 String[] annotationArguments = methodMeta.getSubCommand().split(" ");
                 if (annotationArguments.length == 1 && annotationArguments[0].equalsIgnoreCase("")) {
                     annotationArguments = new String[]{};
                 }
-//                System.out.println("ParameterLength: " + methodMeta.getParameterIndex().size());
-//                System.out.println("AnnotationLength: " + annotationArguments.length);
 
                 if (methodMeta.isTextMerging()) {
                     StringBuilder messageBuilder = new StringBuilder();
@@ -149,14 +139,10 @@ public abstract class CommandEnvironment implements Environment {
                     commandArguments = Arrays.copyOf(commandArguments, annotationLength + 1);
                     String message = messageBuilder.toString().replaceFirst(" ", "");
                     commandArguments[annotationLength] = message;
-//                    System.out.println("ConcatenatingLength: " + commandArguments.length);
-//                    System.out.println("Concatenating: " + commandArguments[commandArguments.length - 1]);
                 }
 
                 // Decrease parameterLength by one, because of Sender objects
                 int expectedLength = annotationArguments.length + (methodMeta.getParameterIndex().size() - 1);
-//                System.out.println("ExpectedLength: " + expectedLength);
-//                System.out.println("CheckArgLength: " + commandArguments.length);
 
                 // Check the expectedLength with the current arguments
                 if (expectedLength != commandArguments.length) {
@@ -176,7 +162,6 @@ public abstract class CommandEnvironment implements Environment {
                     // Check if we got all subcommand arguments.
                     if (annotationArguments.length != 0 && (annotationArguments.length - 1) >= i) {
                         String annotationParam = annotationArguments[i];
-//                        System.out.println(i + " @Subcommand " + annotationParam + "|" + argumentParam);
                         if (!annotationParam.equalsIgnoreCase(argumentParam)) {
                             continue MetaLoop;
                         }
@@ -187,8 +172,6 @@ public abstract class CommandEnvironment implements Environment {
                         int parameterIndexInMethod = (i - annotationArguments.length) + 1;
                         // Get parameterType Class
                         Class<?> parameterType = methodMeta.getParameterIndex().get(parameterIndexInMethod);
-
-//                        System.out.println(i + "|" + parameterIndexInMethod + " Parameter " + argumentParam + "|" + parameterType.getName());
 
                         // Get parser and parse the argument, add that into list.
                         ParameterParser<?> parameterParser = parserRegistry.get(parameterType);
@@ -227,21 +210,17 @@ public abstract class CommandEnvironment implements Environment {
                 for (int i = 0; i < parameterListLength; i++) {
                     Class<?> parameterListClass = parameterList.get(i).getClass();
                     Class<?> parameterIndexClass = methodMeta.getParameterIndex().get(i);
-//                    System.out.println("Check: " + parameterListClass.getName() + "|" + parameterIndexClass.getName());
                     if (!parameterIndexClass.isAssignableFrom(parameterListClass)) {
                         hasMethodWrongParams = true;
                     }
                 }
-//                System.out.println("WrongSyntax: " + wrongSyntax);
                 if (hasMethodWrongParams) {
                     continue;
                 }
 
-//                System.out.println("InvokingLength: " + parameterList.size());
                 if (handleSenderType(command, meta, sender, methodMeta)) {
                     return true;
                 }
-//                System.out.println("Invoked method: " + methodMeta.getMethod().getName());
                 methodMeta.getMethod().invoke(command, parameterList.toArray(new Object[]{}));
                 return true;
             }
@@ -407,11 +386,6 @@ public abstract class CommandEnvironment implements Environment {
 
             for (MethodMeta methodMeta : meta.getSubCommandMetaList()) {
 
-                // Some debug logs.
-                //System.out.println("=====================");
-                //System.out.println("Method: " + methodMeta.getMethod().getName());
-                //System.out.println("ArgsLength: " + arguments.length);
-
                 // Get metaArguments and get expectedLength of arguments for the method
                 String[] metaArgs = methodMeta.getSubCommand().split(" ");
                 if (methodMeta.getSubCommand().equalsIgnoreCase("")) {
@@ -434,10 +408,6 @@ public abstract class CommandEnvironment implements Environment {
                     continue;
                 }
 
-                // Some debug logs.
-                //System.out.println("ExpectedLength: " + expectedLength);
-                //System.out.println("MetaLength: " + metaArgs.length);
-
                 // Create the expected index of the argument
                 int currentIndex = commandString.endsWith(" ") ? arguments.length : arguments.length - 1;
 
@@ -446,8 +416,6 @@ public abstract class CommandEnvironment implements Environment {
                 if (!commandString.endsWith(" ") && (arguments.length - 1) >= 0) {
                     argument = arguments[currentIndex].toLowerCase(Locale.ROOT);
                 }
-
-                //System.out.println("CurrIndex: " + currentIndex);
                 // Check if argumentIndex exceeds our metaArguments
                 int metaLength = metaArgs.length;
                 if (metaLength > 0 && commandString.endsWith(" ")) {
@@ -485,8 +453,6 @@ public abstract class CommandEnvironment implements Environment {
                 // Get the index on which the parameters of the method start
                 int paramStartIndex = metaArgs.length + 1;
 
-                //System.out.println("ParamStartIndex: " + paramStartIndex);
-
                 // Check if argumentIndex exceeds our parameter start index
                 if (paramStartIndex >= currentIndex) {
                     // Get the correct parameter index by subtracting the metaArgs length
@@ -496,10 +462,8 @@ public abstract class CommandEnvironment implements Environment {
                         paramIndex += 1;
                     }
 
-                    //System.out.println("CurrParamIndex: " + paramIndex);
                     // Get the completions of the defined parameter-parser
                     Class<?>[] parameterTypes = methodMeta.getMethod().getParameterTypes();
-                    //System.out.println("ParamSize: " + parameterTypes.length);
                     if ((parameterTypes.length - 1) < paramIndex) {
                         continue;
                     }
