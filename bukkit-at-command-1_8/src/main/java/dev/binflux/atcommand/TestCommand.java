@@ -4,6 +4,7 @@ import dev.binflux.atcommand.annotations.command.Label;
 import dev.binflux.atcommand.annotations.command.ShowHelpWithError;
 import dev.binflux.atcommand.annotations.method.types.Default;
 import dev.binflux.atcommand.annotations.method.Subcommand;
+import dev.binflux.atcommand.conditions.Cond;
 import org.bukkit.entity.Player;
 
 @Label("test")
@@ -23,6 +24,7 @@ public class TestCommand {
 
     @Subcommand("information")
     public void onInformation(Player player) {
+        Cond.check(player.getName().equalsIgnoreCase("Koboo"), "Your name is Koboo, so the condition is true.");
         player.sendMessage("Information");
     }
 }

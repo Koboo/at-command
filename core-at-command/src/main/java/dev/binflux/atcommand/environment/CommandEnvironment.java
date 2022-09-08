@@ -10,12 +10,6 @@ import java.util.*;
 
 public abstract class CommandEnvironment implements Environment {
 
-    private static CommandEnvironment environment;
-
-    public static CommandEnvironment getEnvironment() {
-        return environment;
-    }
-
     private final CommandResolver commandResolver;
     private final Map<Object, CommandMeta> commandRegistry;
     private final Map<Class<?>, ParameterParser<?>> parserRegistry;
@@ -24,7 +18,6 @@ public abstract class CommandEnvironment implements Environment {
     private CommandMeta globalCommandMeta;
 
     public CommandEnvironment() {
-        environment = this;
 
         commandResolver = new CommandResolver(this);
         commandRegistry = new HashMap<>();
@@ -221,7 +214,7 @@ public abstract class CommandEnvironment implements Environment {
                             meta.getErrorMeta().getMethod().invoke(command, sender, exc.getMessage());
                             return true;
                         }
-                        // TODO: Send default error handle message.
+                        sendSenderMessage(sender, "§cAn error occurred! Please check your syntax. §8(§7" + exc.getMessage() + "§8)");
                         break MetaLoop;
                     }
                 }
@@ -245,7 +238,11 @@ public abstract class CommandEnvironment implements Environment {
                     return true;
                 }
 //                System.out.println("Invoked method: " + methodMeta.getMethod().getName());
-                methodMeta.getMethod().invoke(command, parameterList.toArray(new Object[]{}));
+                try {
+                    methodMeta.getMethod().invoke(command, parameterList.toArray(new Object[]{}));
+                } catch (ConditionException exc) {
+                    sendSenderMessage(sender, exc.getMessage());
+                }
                 return true;
             }
             return callHelpAllSubcommands(sender, label, command, meta);
@@ -268,7 +265,7 @@ public abstract class CommandEnvironment implements Environment {
                 globalCommandMeta.getWrongSenderMeta().getMethod().invoke(globalCommand, sender);
                 return true;
             }
-            // TODO: Send default wrong sender message.
+            sendSenderMessage(sender, "§cThis command is only for " + expectedSender.getSimpleName() + "!");
             return true;
         }
         return false;
@@ -338,7 +335,7 @@ public abstract class CommandEnvironment implements Environment {
                 globalCommandMeta.getNoPermissionMeta().getMethod().invoke(globalCommand, sender, permission, commandString);
                 return true;
             }
-            //TODO: Send default no permission message.
+            sendSenderMessage(sender, "§cLooks like you don't have permission for that.");
             return false;
         }
         if (handleSenderType(command, meta, sender, meta.getNoPermissionMeta())) {
