@@ -208,8 +208,12 @@ public abstract class CommandEnvironment implements Environment {
 
                     } catch (ParameterException exc) {
                         if (meta.getErrorMeta() != null) {
+                            // If an error occurs, and the annotation is present, we show the sender
+                            // the help message for the subcommand
                             if (meta.isShowHelpWithError()) {
-                                callHelpSubCommand(sender, label, command, meta, methodMeta);
+                                List<CommandSyntax> syntaxList = new ArrayList<>();
+                                syntaxList.add(methodMeta.getSyntax());
+                                callHelp(command, meta, sender, label, syntaxList);
                             }
                             if (globalCommandMeta != null && globalCommandMeta.getHelpMeta() != null) {
                                 if (handleSenderType(globalCommand, globalCommandMeta, sender, globalCommandMeta.getErrorMeta())) {
@@ -264,24 +268,25 @@ public abstract class CommandEnvironment implements Environment {
             if (meta.getWrongSenderMeta() != null) {
                 meta.getWrongSenderMeta().getMethod().invoke(command, sender);
                 return true;
-            } else {
-                if (globalCommandMeta != null && globalCommandMeta.getHelpMeta() != null) {
-                    globalCommandMeta.getWrongSenderMeta().getMethod().invoke(globalCommand, sender);
-                    return true;
-                }
             }
+            if (globalCommandMeta != null && globalCommandMeta.getHelpMeta() != null) {
+                globalCommandMeta.getWrongSenderMeta().getMethod().invoke(globalCommand, sender);
+                return true;
+            }
+            // TODO: Send default message.
+            return true;
         }
         return false;
     }
 
-    private <T> boolean callHelp(Object command, CommandMeta meta, T sender, CommandHelp commandHelp)
+    private <T> boolean callHelp(Object command, CommandMeta meta, T sender, String usedLabel, List<CommandSyntax> syntaxList)
             throws InvocationTargetException, IllegalAccessException {
         if (meta.getHelpMeta() == null) {
             if (globalCommandMeta != null && globalCommandMeta.getHelpMeta() != null) {
                 if (handleSenderType(globalCommand, globalCommandMeta, sender, globalCommandMeta.getHelpMeta())) {
                     return true;
                 }
-                globalCommandMeta.getHelpMeta().getMethod().invoke(globalCommand, sender, commandHelp);
+                globalCommandMeta.getHelpMeta().getMethod().invoke(globalCommand, sender, usedLabel, syntaxList);
                 return true;
             }
             return false;
@@ -289,7 +294,7 @@ public abstract class CommandEnvironment implements Environment {
         if (handleSenderType(command, meta, sender, meta.getHelpMeta())) {
             return true;
         }
-        meta.getHelpMeta().getMethod().invoke(command, sender, commandHelp);
+        meta.getHelpMeta().getMethod().invoke(command, sender, usedLabel, syntaxList);
         return true;
     }
 
@@ -325,16 +330,7 @@ public abstract class CommandEnvironment implements Environment {
         if (helpMeta != null) {
             syntaxList.add(new CommandSyntax("help", null));
         }
-        CommandHelp help = new CommandHelp(label, syntaxList);
-        return callHelp(command, meta, sender, help);
-    }
-
-    private <T> boolean callHelpSubCommand(T sender, String label, Object command, CommandMeta meta, MethodMeta subMeta)
-            throws InvocationTargetException, IllegalAccessException {
-        List<CommandSyntax> syntaxList = new ArrayList<>();
-        syntaxList.add(subMeta.getSyntax());
-        CommandHelp help = new CommandHelp(label, syntaxList);
-        return callHelp(command, meta, sender, help);
+        return callHelp(command, meta, sender, label, syntaxList);
     }
 
     private <T> boolean callNoPermission(Object command, CommandMeta meta, T sender, String permission, String commandString)
@@ -451,11 +447,11 @@ public abstract class CommandEnvironment implements Environment {
                 //System.out.println("CurrIndex: " + currentIndex);
                 // Check if argumentIndex exceeds our metaArguments
                 int metaLength = metaArgs.length;
-                if(metaLength > 0 && commandString.endsWith(" ")) {
+                if (metaLength > 0 && commandString.endsWith(" ")) {
                     boolean skipSubCommand = false;
-                    for(int i = 0; i < metaLength; i++) {
+                    for (int i = 0; i < metaLength; i++) {
                         String metaArgument = metaArgs[i];
-                        if(arguments.length >= metaLength) {
+                        if (arguments.length >= metaLength) {
                             String passedArgument = arguments[i];
                             if (!passedArgument.equalsIgnoreCase(metaArgument)) {
                                 skipSubCommand = true;
@@ -463,7 +459,7 @@ public abstract class CommandEnvironment implements Environment {
                             }
                         }
                     }
-                    if(skipSubCommand) {
+                    if (skipSubCommand) {
                         continue;
                     }
                 }
@@ -493,7 +489,7 @@ public abstract class CommandEnvironment implements Environment {
                     // Get the correct parameter index by subtracting the metaArgs length
                     // We don't need a '-1' here, because we ignore the sender parameter
                     int paramIndex = arguments.length - metaArgs.length;
-                    if(commandString.endsWith(" ")) {
+                    if (commandString.endsWith(" ")) {
                         paramIndex += 1;
                     }
 
