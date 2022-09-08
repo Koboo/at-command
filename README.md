@@ -122,7 +122,9 @@ Modify the parsing and execution order: (optional)
 
 * Create a new class and annotate with ``@Alias``
 ````java
-@Alias(alias = {"example", "examplecommand"})
+@Label("example")
+@Label("examplealias")
+@Label("otherlabel")
 public class ExampleCommand {
     
 }
@@ -130,7 +132,9 @@ public class ExampleCommand {
 
 * Create a method for command without arguments ``/example`` with ``@Default``
 ````java
-@Alias(alias = {"example", "examplecommand"})
+@Label("example")
+@Label("examplealias")
+@Label("otherlabel")
 public class ExampleCommand {
     
     @Default
@@ -143,7 +147,9 @@ public class ExampleCommand {
 
 * Create a method for showing help messages with ``@OnHelp``
 ````java
-@Alias(alias = {"example", "examplecommand"})
+@Label("example")
+@Label("examplealias")
+@Label("otherlabel")
 public class ExampleCommand {
     
     @Default
@@ -165,33 +171,31 @@ public class ExampleCommand {
 
 * Now we can replace ``@Default`` with ``@OnHelp``, just annotate the command with ``@ShowHelpOnDefault``
 ````java
-@Alias(alias = {"example", "examplecommand"})
+@Label("example")
+@Label("examplealias")
+@Label("otherlabel")
 public class ExampleCommand {
     
     @OnHelp
-    public void onHelp(CommandSender sender, CommandHelp commandHelp) {
-        // The executed command (or alias) without leading "/"
-        String command = commandHelp.getLabel();
-        
-        // The possible syntax, which can be executed
-        List<String> commandSyntax = commandHelp.getSyntaxList();
+    public void onHelp(CommandSender sender, String command, List<CommandSyntax> syntaxList) {
+        // command = The executed command (or alias) without leading "/"
+        // syntaxList = The possible syntax, which can be executed, with the needed permission if present
     }
 }
 ````
 
-* Create a method for errors and show help with errors.
+* Create a method for showing errors.
 ````java
-@Alias(alias = {"example", "examplecommand"})
+@Label("example")
+@Label("examplealias")
+@Label("otherlabel")
 @ShowHelpWithError
 public class ExampleCommand {
-    
+
     @OnHelp
-    public void onHelp(CommandSender sender, CommandHelp commandHelp) {
-        // The executed command (or alias) without leading "/"
-        String command = commandHelp.getLabel();
-        
-        // The possible syntax, which can be executed
-        List<String> commandSyntax = commandHelp.getSyntaxList();
+    public void onHelp(CommandSender sender, String command, List<CommandSyntax> syntaxList) {
+        // command = The executed command (or alias) without leading "/"
+        // syntaxList = The possible syntax, which can be executed, with the needed permission if present
     }
     
     @OnError
@@ -203,35 +207,32 @@ public class ExampleCommand {
 
 * The ``@OnError`` method can also be replaced by ``@OnHelp`` with ``@ShowHelpOnError``
 ````java
-@Alias(alias = {"example", "examplecommand"})
+@Label("example")
+@Label("examplealias")
+@Label("otherlabel")
 @ShowHelpOnError
 public class ExampleCommand {
-    
+
     @OnHelp
-    public void onHelp(CommandSender sender, CommandHelp commandHelp) {
-        // The executed command (or alias) without leading "/"
-        String command = commandHelp.getLabel();
-        
-        // The possible syntax, which can be executed
-        List<String> commandSyntax = commandHelp.getSyntaxList();
+    public void onHelp(CommandSender sender, String command, List<CommandSyntax> syntaxList) {
+        // command = The executed command (or alias) without leading "/"
+        // syntaxList = The possible syntax, which can be executed, with the needed permission if present
     }
 }
 ````
 
-
 * Create a method for no permissions.
 ````java
-@Alias(alias = {"example", "examplecommand"})
+@Label("example")
+@Label("examplealias")
+@Label("otherlabel")
 @ShowHelpOnError
 public class ExampleCommand {
-    
+
     @OnHelp
-    public void onHelp(CommandSender sender, CommandHelp commandHelp) {
-        // The executed command (or alias) without leading "/"
-        String command = commandHelp.getLabel();
-        
-        // The possible syntax, which can be executed
-        List<String> commandSyntax = commandHelp.getSyntaxList();
+    public void onHelp(CommandSender sender, String command, List<CommandSyntax> syntaxList) {
+        // command = The executed command (or alias) without leading "/"
+        // syntaxList = The possible syntax, which can be executed, with the needed permission if present
     }
     
     @NoPermission
@@ -241,37 +242,35 @@ public class ExampleCommand {
     }
 }
 ````
-* If you remove the ``@NoPermission``-method no action is happening if the ``Sender`` doesn't have permission.
+* If you remove the ``@NoPermission``-method, the default message is send.
 
 ````java
-@Alias(alias = {"example", "examplecommand"})
+@Label("example")
+@Label("examplealias")
+@Label("otherlabel")
 @ShowHelpOnError
 public class ExampleCommand {
-    
+
     @OnHelp
-    public void onHelp(CommandSender sender, CommandHelp commandHelp) {
-        // The executed command (or alias) without leading "/"
-        String command = commandHelp.getLabel();
-        
-        // The possible syntax, which can be executed
-        List<String> commandSyntax = commandHelp.getSyntaxList();
+    public void onHelp(CommandSender sender, String command, List<CommandSyntax> syntaxList) {
+        // command = The executed command (or alias) without leading "/"
+        // syntaxList = The possible syntax, which can be executed, with the needed permission if present
     }
 }
 ````
 
 * Now we can create several sub-commands with and without arguments.
 ````java
-@Alias(alias = {"example", "examplecommand"})
+@Label("example")
+@Label("examplealias")
+@Label("otherlabel")
 @ShowHelpOnError
 public class ExampleCommand {
-    
+
     @OnHelp
-    public void onHelp(CommandSender sender, CommandHelp commandHelp) {
-        // The executed command (or alias) without leading "/"
-        Stirng command = commandHelp.getLabel();
-        
-        // The possible syntax, which can be executed
-        List<String> commandSyntax = commandHelp.getSyntaxList();
+    public void onHelp(CommandSender sender, String command, List<CommandSyntax> syntaxList) {
+        // command = The executed command (or alias) without leading "/"
+        // syntaxList = The possible syntax, which can be executed, with the needed permission if present
     }
     
     // Command: "/example subcommand"
