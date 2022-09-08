@@ -10,4 +10,5 @@ import java.lang.annotation.Target;
 public @interface Subcommand {
 
     String value() default "";
+    String desc() default "";
 }

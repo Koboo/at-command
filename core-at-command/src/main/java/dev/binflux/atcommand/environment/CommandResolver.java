@@ -2,8 +2,8 @@ package dev.binflux.atcommand.environment;
 
 import dev.binflux.atcommand.annotations.command.*;
 import dev.binflux.atcommand.annotations.method.*;
+import dev.binflux.atcommand.annotations.method.types.*;
 import dev.binflux.atcommand.annotations.options.Access;
-import dev.binflux.atcommand.annotations.options.Async;
 import dev.binflux.atcommand.annotations.options.Concate;
 import dev.binflux.atcommand.annotations.options.Order;
 import dev.binflux.atcommand.environment.meta.CommandMeta;
@@ -139,9 +139,6 @@ public class CommandResolver {
             permission = method.getAnnotation(Access.class).value();
         }
 
-        // Parse async execution of method
-        boolean async = method.isAnnotationPresent(Async.class);
-
         // Parse concatenating value of method;
         boolean concatenating = method.isAnnotationPresent(Concate.class);
 
@@ -179,18 +176,19 @@ public class CommandResolver {
         }
 
         String subCommand = null;
+        String usage = null;
         if (method.isAnnotationPresent(Subcommand.class)) {
-            subCommand = method.getAnnotation(Subcommand.class).value();
+            Subcommand subcommandAnnotation = method.getAnnotation(Subcommand.class);
+            subCommand = subcommandAnnotation.value();
+            String annotationUsage = subcommandAnnotation.desc();
+            if(!annotationUsage.equalsIgnoreCase("")) {
+                usage = annotationUsage;
+            }
         }
 
         int order = 0;
         if (method.isAnnotationPresent(Order.class)) {
             order = method.getAnnotation(Order.class).value();
-        }
-
-        String usage = null;
-        if(method.isAnnotationPresent(Usage.class)) {
-            usage = method.getAnnotation(Usage.class).value();
         }
 
         CommandSyntax commandSyntax;
@@ -222,6 +220,6 @@ public class CommandResolver {
             commandSyntax = new CommandSyntax(usage, permission);
         }
 
-        return new MethodMeta(permission, async, subCommand, concatenating, order, method, parameterIndex, commandSyntax);
+        return new MethodMeta(permission, subCommand, concatenating, order, method, parameterIndex, commandSyntax);
     }
 }

@@ -1,4 +1,4 @@
-package dev.binflux.atcommand.annotations.method;
+package dev.binflux.atcommand.annotations.method.types;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
