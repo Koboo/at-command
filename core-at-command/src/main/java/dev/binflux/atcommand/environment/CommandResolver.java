@@ -4,7 +4,7 @@ import dev.binflux.atcommand.annotations.command.*;
 import dev.binflux.atcommand.annotations.method.*;
 import dev.binflux.atcommand.annotations.method.types.*;
 import dev.binflux.atcommand.annotations.options.Access;
-import dev.binflux.atcommand.annotations.options.Concate;
+import dev.binflux.atcommand.annotations.options.MergeText;
 import dev.binflux.atcommand.annotations.options.Order;
 import dev.binflux.atcommand.environment.meta.CommandMeta;
 import dev.binflux.atcommand.environment.meta.CommandSyntax;
@@ -28,23 +28,18 @@ public class CommandResolver {
 
         boolean isGlobalCommand = commandClass.getAnnotation(Global.class) != null;
 
-        List<String> aliasList = new ArrayList<>();
+        List<String> commandLabelList = new ArrayList<>();
         if (!isGlobalCommand) {
-
-            Alias annotation = commandClass.getAnnotation(Alias.class);
-            if (annotation == null) {
-                throw new InvalidCommandException(className + " must have @Alias annotation!");
+            Label[] labels = commandClass.getAnnotationsByType(Label.class);
+            if(labels.length == 0) {
+                throw new InvalidCommandException(className + " must have at least one @Label annotation!");
             }
 
-            for (String alias : annotation.alias()) {
-                alias = alias.toLowerCase(Locale.ROOT);
-                if (!aliasList.contains(alias)) {
-                    aliasList.add(alias);
+            for (Label label : labels) {
+                String labelString = label.value().toLowerCase(Locale.ROOT);
+                if (!commandLabelList.contains(labelString)) {
+                    commandLabelList.add(labelString);
                 }
-            }
-
-            if (aliasList.isEmpty()) {
-                throw new InvalidCommandException(className + " doesn't have any command aliases!");
             }
         }
 
@@ -128,7 +123,7 @@ public class CommandResolver {
 
         boolean showHelpWithError = commandClass.isAnnotationPresent(ShowHelpWithError.class);
 
-        return new CommandMeta(aliasList, rootPermission, defaultMeta, helpMeta, noPermissionMeta, errorMeta,
+        return new CommandMeta(commandLabelList, rootPermission, defaultMeta, helpMeta, noPermissionMeta, errorMeta,
                 notAPlayerMeta, subCommandMetaList, isGlobalCommand, showHelpWithError);
     }
 
@@ -140,7 +135,7 @@ public class CommandResolver {
         }
 
         // Parse concatenating value of method;
-        boolean concatenating = method.isAnnotationPresent(Concate.class);
+        boolean concatenating = method.isAnnotationPresent(MergeText.class);
 
         // Check length
         String className = commandClass.getName();
@@ -180,7 +175,7 @@ public class CommandResolver {
         if (method.isAnnotationPresent(Subcommand.class)) {
             Subcommand subcommandAnnotation = method.getAnnotation(Subcommand.class);
             subCommand = subcommandAnnotation.value();
-            String annotationUsage = subcommandAnnotation.desc();
+            String annotationUsage = subcommandAnnotation.usage();
             if(!annotationUsage.equalsIgnoreCase("")) {
                 usage = annotationUsage;
             }

@@ -1,17 +1,11 @@
 package dev.binflux.atcommand.environment;
 
-import dev.binflux.atcommand.annotations.command.*;
-import dev.binflux.atcommand.annotations.method.*;
-import dev.binflux.atcommand.annotations.options.*;
 import dev.binflux.atcommand.environment.meta.*;
-import dev.binflux.atcommand.environment.utilities.OrderComparator;
 import dev.binflux.atcommand.exceptions.*;
 import dev.binflux.atcommand.parser.ParameterParser;
 import dev.binflux.atcommand.parser.types.*;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.*;
 
 public abstract class CommandEnvironment implements Environment {
@@ -147,7 +141,7 @@ public abstract class CommandEnvironment implements Environment {
 //                System.out.println("ParameterLength: " + methodMeta.getParameterIndex().size());
 //                System.out.println("AnnotationLength: " + annotationArguments.length);
 
-                if (methodMeta.isConcatenating()) {
+                if (methodMeta.isTextMerging()) {
                     StringBuilder messageBuilder = new StringBuilder();
                     int parameterAddition = methodMeta.getParameterIndex().size() - 2;
                     int annotationLength = annotationArguments.length + parameterAddition;
@@ -429,7 +423,7 @@ public abstract class CommandEnvironment implements Environment {
                 }
 
                 // Continue if we only got a non-concatenating message
-                if (methodMeta.isConcatenating()) {
+                if (methodMeta.isTextMerging()) {
                     continue;
                 }
 

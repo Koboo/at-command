@@ -15,7 +15,7 @@ public class MethodMeta {
 
     String permission;
     String subCommand;
-    boolean concatenating;
+    boolean textMerging;
     int order;
     Method method;
     Map<Integer, Class<?>> parameterIndex;

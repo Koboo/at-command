@@ -1,12 +1,13 @@
 package dev.binflux.atcommand;
 
-import dev.binflux.atcommand.annotations.command.Alias;
+import dev.binflux.atcommand.annotations.command.Label;
 import dev.binflux.atcommand.annotations.command.ShowHelpWithError;
 import dev.binflux.atcommand.annotations.method.types.Default;
 import dev.binflux.atcommand.annotations.method.Subcommand;
 import org.bukkit.entity.Player;
 
-@Alias(alias = {"test"})
+@Label("test")
+@Label("secondtest")
 @ShowHelpWithError
 public class TestCommand {
 
