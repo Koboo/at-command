@@ -3,16 +3,17 @@ package dev.binflux.atcommand;
 import dev.binflux.atcommand.environment.BungeeCommandEnvironment;
 import dev.binflux.atcommand.listener.TabCompleteListener;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.java.Log;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 
 @Log
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class AtCommandPlugin extends Plugin {
 
-    BungeeCommandEnvironment environment;
+    @Getter
+    private static BungeeCommandEnvironment environment;
 
     @Override
     public void onLoad() {

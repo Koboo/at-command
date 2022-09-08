@@ -27,11 +27,8 @@ but can also support other build systems like [Maven](https://maven.apache.org/)
 ```groovy
 repositories {
     maven {
-        url 'https://repo.koboo.eu/binflux'
-        credentials {
-            username System.getenv('REPO_USER')
-            password System.getenv('REPO_TOKEN')
-        }
+        name 'koboo-reposilite'
+        url 'https://reposilite.koboo.eu/releases'
     }
 }
 
@@ -41,23 +38,15 @@ dependencies {
     compileOnly 'dev.binflux:bukkit-at-command:1.0'
 }
 ```
-
-### Upcoming Features
-
-* ``@Usage("<argument> [optional] whatever")`` annotation for method to define unique usage/help messages
-* Bukkit auto-completion without dependencies and without reflections
-
 ## Usage
 
 ### Command Annotations
 
-Set command and aliases:
-* ``@Alias(alias = {"command", "labels", "here"}``
+Set command labels:
+* ``@Label("command")``
+You can use this annotation multiple times.
 
-Execute ``OnHelp``-method if no ``OnError``-method is defined:
-* ``@ShowHelpOnError``
-
-Execute ``OnHelp``-method before the ``OnError``-method is executed:
+Execute ``OnHelp``-method, before the ``OnError``-method is executed to display help of the subcommand:
 * ``@ShowHelpWithError``
 
 Create global methods for ``OnHelp``, ``OnError``, ``WrongSender`` and ``NoPermission``:
@@ -66,41 +55,67 @@ Create global methods for ``OnHelp``, ``OnError``, ``WrongSender`` and ``NoPermi
 ### Method Annotations
 
 Set the method for command without arguments:
-* ``@Default``
-* ``(Sender sender)``
+````java
+@Default
+public void onDefault(CommandSender sender) {
+    // Do something..
+}
+````
 
 Set the method for no permissions:
-* ``@NoPermission``
-* ``(Sender sender, String missingPermission, String executedSyntax)``
+````java
+@NoPermission
+public void onNoPermission(CommandSender sender, String missingPermission, String executedSyntax) {
+    // Do something..
+}
+````
 
 Set the method for error handling:
-* ``@OnError``
-* ``(Sender sender, String errorMessage)``
+````java
+@OnError
+public void onError(CommandSender sender, String errorMessage) {
+    // Do something..
+}
+````
 
 Set the method for help-printing:
-* ``@OnHelp``
-* ``(Sender sender, CommandHelp commandHelp)``
+````java
+@OnHelp
+public void onHelp(CommandSender sender, String executedLabel, List<CommandSyntax> syntaxList) {
+    // Do something..
+}
+````
 
 Set the methods sub-command:
-* ``@Subcommand``
-* ``(Sender sender/*, other arguments go here.*/)``
+````java
+@Subcommand
+public void onSubcommandWithoutName(CommandSender sender, String anyArgument /*, other arguments..*/) {
+    // Do something..
+}
+        
+@Subcommand("subcommandname")
+public void onSubcommandWithName(CommandSender sender /*, other arguments..*/) {
+    // Do something..
+}
+````
 
 Set the method for wrong sender type:
-* ``@WrongSender``
-* ``(Sender sender)``
+````java
+@WrongSender
+public void onWrongSender(CommandSender sender) {
+    // Do something..
+}
+````
 
 ### Option Annotations
 
 Set a custom permission:
-* ``@Access(value = "permission.goes.here")``
+* ``@Access("permission.goes.here")``
 
-Execute the command async:
-* ``@Async``
+Merge the arguments to one concated ``String``:
+* ``@MergeText``
 
-Concat the arguments to one big ``String``:
-* ``@Messages``
-
-Modify the parsing and execution order:
+Modify the parsing and execution order: (optional)
 * ``@Order(99)``
 
 ### Create Commands
@@ -140,7 +155,7 @@ public class ExampleCommand {
     @OnHelp
     public void onHelp(CommandSender sender, CommandHelp commandHelp) {
         // The executed command (or alias) without leading "/"
-        Stirng command = commandHelp.getLabel();
+        String command = commandHelp.getLabel();
         
         // The possible syntax, which can be executed
         List<String> commandSyntax = commandHelp.getSyntaxList();
@@ -173,7 +188,7 @@ public class ExampleCommand {
     @OnHelp
     public void onHelp(CommandSender sender, CommandHelp commandHelp) {
         // The executed command (or alias) without leading "/"
-        Stirng command = commandHelp.getLabel();
+        String command = commandHelp.getLabel();
         
         // The possible syntax, which can be executed
         List<String> commandSyntax = commandHelp.getSyntaxList();
@@ -195,7 +210,7 @@ public class ExampleCommand {
     @OnHelp
     public void onHelp(CommandSender sender, CommandHelp commandHelp) {
         // The executed command (or alias) without leading "/"
-        Stirng command = commandHelp.getLabel();
+        String command = commandHelp.getLabel();
         
         // The possible syntax, which can be executed
         List<String> commandSyntax = commandHelp.getSyntaxList();
@@ -213,7 +228,7 @@ public class ExampleCommand {
     @OnHelp
     public void onHelp(CommandSender sender, CommandHelp commandHelp) {
         // The executed command (or alias) without leading "/"
-        Stirng command = commandHelp.getLabel();
+        String command = commandHelp.getLabel();
         
         // The possible syntax, which can be executed
         List<String> commandSyntax = commandHelp.getSyntaxList();
@@ -236,7 +251,7 @@ public class ExampleCommand {
     @OnHelp
     public void onHelp(CommandSender sender, CommandHelp commandHelp) {
         // The executed command (or alias) without leading "/"
-        Stirng command = commandHelp.getLabel();
+        String command = commandHelp.getLabel();
         
         // The possible syntax, which can be executed
         List<String> commandSyntax = commandHelp.getSyntaxList();
@@ -275,7 +290,7 @@ public class ExampleCommand {
     
     // Command: "/example send <Some text with spaces>" 
     @Subcommand("send")
-    @Message // Concat arguments to text
+    @MergeText // Concat arguments to text
     public void onSend(CommandSender sender, String text) {
         sender.sendMessage("You send: " + text);
     }
@@ -284,14 +299,14 @@ public class ExampleCommand {
 
 ### Register Commands
 
-If a command needs to get registered, this must be done via the ``Environment``.
+If you want to register a command, you do it through the ``CommandEnvironment`` of the desired platform.
 
 ````java
-Environment environment = KloudAPI.getEnvironment();
+Environment environment = AtCommandPlugin.getEnvironment();
 environment.registerCommand(new ExampleCommand());
 ````
 
-No need to register it through Bukkit, Bungeecord or in their ``plugin.yml``s.
+**No need to register it through Bukkit, BungeeCord or in their ``plugin.yml`` files.**
 
 ### Default Argument Parsers
 

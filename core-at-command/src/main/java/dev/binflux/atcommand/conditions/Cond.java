@@ -4,9 +4,11 @@ import dev.binflux.atcommand.exceptions.ConditionException;
 
 public class Cond {
 
-    public static void check(boolean throwIfTrue, String message) {
-        if(throwIfTrue) {
+    public static void check(boolean conditionStatement, String message) {
+        if(!conditionStatement) {
             throw new ConditionException(message);
         }
     }
+
+
 }
