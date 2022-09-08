@@ -1,5 +1,6 @@
 package dev.binflux.atcommand.environment;
 
+import dev.binflux.atcommand.conditions.Cond;
 import dev.binflux.atcommand.environment.meta.*;
 import dev.binflux.atcommand.exceptions.*;
 import dev.binflux.atcommand.parser.ParameterParser;
@@ -240,8 +241,12 @@ public abstract class CommandEnvironment implements Environment {
 //                System.out.println("Invoked method: " + methodMeta.getMethod().getName());
                 try {
                     methodMeta.getMethod().invoke(command, parameterList.toArray(new Object[]{}));
-                } catch (ConditionException exc) {
-                    sendSenderMessage(sender, exc.getMessage());
+                } catch (InvocationTargetException exc) {
+                    if(!(exc.getCause() instanceof ConditionException)) {
+                        exc.printStackTrace();
+                        return false;
+                    }
+                    sendSenderMessage(sender, exc.getCause().getMessage());
                 }
                 return true;
             }
