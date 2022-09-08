@@ -227,6 +227,7 @@ public abstract class CommandEnvironment implements Environment {
                             meta.getErrorMeta().getMethod().invoke(command, sender, exc.getMessage());
                             return true;
                         }
+                        // TODO: Send default error handle message.
                         break MetaLoop;
                     }
                 }
@@ -273,7 +274,7 @@ public abstract class CommandEnvironment implements Environment {
                 globalCommandMeta.getWrongSenderMeta().getMethod().invoke(globalCommand, sender);
                 return true;
             }
-            // TODO: Send default message.
+            // TODO: Send default wrong sender message.
             return true;
         }
         return false;
@@ -343,6 +344,7 @@ public abstract class CommandEnvironment implements Environment {
                 globalCommandMeta.getNoPermissionMeta().getMethod().invoke(globalCommand, sender, permission, commandString);
                 return true;
             }
+            //TODO: Send default no permission message.
             return false;
         }
         if (handleSenderType(command, meta, sender, meta.getNoPermissionMeta())) {

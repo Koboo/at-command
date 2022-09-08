@@ -11,17 +11,19 @@ public interface Environment {
 
     Class<?> getConsoleClass();
 
-    <T> boolean hasNotPermission(T sender, String permission);
+    <S> void sendSenderMessage(S sender, String message);
 
-    <T> void registerCommand(T command);
+    <S> boolean hasNotPermission(S sender, String permission);
 
-    <T> void afterRegistration(T command, CommandMeta commandMeta);
+    <C> void registerCommand(C command);
+
+    <C> void afterRegistration(C command, CommandMeta commandMeta);
 
     void registerParser(ParameterParser<?> parameterParser);
 
     void registerParser(ParameterParser<?> parameterParser, boolean override);
 
-    <T> boolean handleCommand(T senderObject, String command);
+    <S> boolean handleCommand(S sender, String command);
 
-    <T> List<String> handleCompletions(T senderObject, String command, List<String> completions);
+    <S> List<String> handleCompletions(S sender, String command, List<String> completions);
 }

@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import javax.swing.text.html.HTMLDocument;
@@ -30,7 +31,16 @@ public class BungeeCommandEnvironment extends CommandEnvironment {
     }
 
     @Override
-    public <T> boolean hasNotPermission(T sender, String permission) {
+    public <S> void sendSenderMessage(S sender, String message) {
+        if(!(sender instanceof CommandSender)) {
+            return;
+        }
+        CommandSender commandSender = (CommandSender) sender;
+        commandSender.sendMessage(TextComponent.fromLegacyText(message));
+    }
+
+    @Override
+    public <S> boolean hasNotPermission(S sender, String permission) {
         return !((CommandSender) sender).hasPermission(permission);
     }
 
