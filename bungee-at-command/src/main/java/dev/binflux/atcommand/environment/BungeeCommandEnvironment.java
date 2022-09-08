@@ -2,20 +2,22 @@ package dev.binflux.atcommand.environment;
 
 import dev.binflux.atcommand.AtCommandPlugin;
 import dev.binflux.atcommand.environment.meta.CommandMeta;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
+import javax.swing.text.html.HTMLDocument;
 import java.util.ArrayList;
 import java.util.List;
 
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BungeeCommandEnvironment extends CommandEnvironment {
 
-    private final AtCommandPlugin plugin;
-
-    public BungeeCommandEnvironment(AtCommandPlugin plugin) {
-        this.plugin = plugin;
-    }
+    AtCommandPlugin plugin;
 
     @Override
     public Class<?> getPlayerClass() {

@@ -5,6 +5,7 @@ import org.bukkit.GameMode;
 
 import java.util.Locale;
 
+//TODO: Completion
 public class GameModeParser extends ParameterParser<GameMode> {
 
     private static final GameMode[] VALUES = GameMode.values();

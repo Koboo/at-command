@@ -19,6 +19,9 @@ public class BungeeRootCommand extends Command {
             argumentString.append(" ").append(arg);
         }
         String commandString = getName() + argumentString;
+        if(environment == null) {
+            return;
+        }
         environment.handleCommand(sender, commandString);
     }
 }

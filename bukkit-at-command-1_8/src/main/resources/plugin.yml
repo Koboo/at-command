@@ -3,5 +3,5 @@ version: @PROJECT_VERSION@
 author: @PLUGIN_AUTHOR@
 main: @PLUGIN_MAIN@
 load: STARTUP
-api-version: 1.19
+api-version: 1.13
 commands:

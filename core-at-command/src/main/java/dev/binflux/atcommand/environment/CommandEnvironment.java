@@ -380,6 +380,7 @@ public abstract class CommandEnvironment implements Environment {
 
             // Create the command label
             String label = commandString.split(" ")[0].toLowerCase(Locale.ROOT);
+            //System.out.println("Label: " + label);
             String[] arguments = new String[]{};
             // If possible, we create the arguments as String[]
             if (commandString.length() > (label.length() + 1)) {
