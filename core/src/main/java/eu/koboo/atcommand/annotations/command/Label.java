@@ -4,7 +4,7 @@ import java.lang.annotation.*;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-@Repeatable(value = Labels.class)
+@Repeatable(value = LabelArray.class)
 public @interface Label {
 
     String value();
