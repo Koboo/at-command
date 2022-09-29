@@ -7,14 +7,14 @@ the command class or the methods within the class.
 ## Overview
 
 * [Dependency](#dependency)
-* [Command Annotations](#command-annotations)
-* [Method Annotations](#method-annotations)
-* [Option Annotations](#option-annotations)
-* [Create Commands](#create-commands)
+* [Get Started](#get-started)
+* [Methods](#methods)
+* [Permissions](#permissions)
+* [Help](#help)
 * [Register Commands](#register-commands)
 * [Default Argument Parser](#default-argument-parsers)
-* [Create own Parser](#create-own-parser)
-* [Register new Parser](#register-new-parser)
+* [Create Parser](#create-parameterparser)
+* [Register Parser](#register-parameterparser)
 
 ### Dependency
 
@@ -42,9 +42,7 @@ dependencies {
     compileOnly 'eu.koboo.atcommand:bukkit-plugin:1.0'
 }
 ```
-## Usage
-
-### Command Annotations
+## Get Started
 
 First of all you need to set the ``@Label`` of the command. You can use the annotation multiple times, 
 to set multiple aliases.
@@ -56,9 +54,6 @@ to set multiple aliases.
 public class TestCommand {
 }
 ````
-
-Execute ``OnHelp``-method, before the ``OnError``-method is executed to display help of the subcommand:
-* ``@ShowHelpWithError``
 
 You can create a ``@Global`` command with the handler-methods of the following annotations 
 - ``@OnHelp``
@@ -86,7 +81,7 @@ public class TestGlobalCommand {
 
     @OnHelp
     public void onHelp(CommandSender sender, String command, List<CommandSyntax> syntaxList) {
-        sender.sendMessage("Help of \"" + command + "\":");
+        sender.sendMessage("Help of /" + command + ":");
         for (CommandSyntax syntax : syntaxList) {
             sender.sendMessage("Usage: /" + command + " " + syntax.getSyntax());
         }
@@ -105,7 +100,7 @@ public class TestGlobalCommand {
 }
 ````
 
-### Method Annotations
+## Methods
 
 To define methods in a command there are two annotations which allow this.
 
@@ -156,7 +151,7 @@ public class ExampleCommand {
 }
 ````
 
-### Permissions
+## Permissions
 
 And how can you set specific permissions for a command? Do you have to check them yourself, 
 although there is a ``@NoPermission`` method?
@@ -168,7 +163,7 @@ To define permissions you just have to use the ``@Access("permission")`` annotat
 This works for a command and for methods, even together!
 If a player does not have the permission, the ``@NoPermission`` method is called.
 
-### Display help with errors
+## Help
 
 Since some players might be overwhelmed when an error occurs, and they don't always understand the error text, 
 you can also have the Help method run before the Error method. 
@@ -186,7 +181,7 @@ public class ExampleCommand {
 }
 ````
 
-### Register Commands
+## Register Commands
 
 You have written your commands and want to register them now? Nice!
 
@@ -194,7 +189,7 @@ There are two ways to do this, via the CommandEnvironment.
 
 **Attention, you must not register the commands via Bukkit, Bungeecord or their ``plugin.yml`` files!**
 
-1. **Instance registration:**
+### (1) **Instance registration:**
 
 If you want to create the instance of the command yourself, you can register it using the following method:
 
@@ -208,14 +203,14 @@ public class TestPlugin extends JavaPlugin {
 }
 ````
 
-2. **Dynamic registration**
+### (2) **Dynamic registration**
 
 You can also create and register command instances via the plugin. Just insert the package names of the commands
 into the method.
 
 Dependency logic can be used to set custom values in the fields of the dynamic commands. 
 
-**To use dynamic registry, the command must have a public no-args constructor!**
+**To use dynamic registration, the command must have a public no-args constructor!**
 
 **_Code-Example:_**
 ````java
@@ -245,7 +240,7 @@ public class TestPlugin extends JavaPlugin {
 }
 ````
 
-### Default Argument Parsers
+## Default Argument Parsers
 
 These ``ParameterParser<ObjectToParse>`` are by default added to the environment:
 
@@ -262,7 +257,7 @@ Bukkit-related:
 * ``GameModeParser``
 * ``WorldParser``
 
-### Create own Parser
+## Create ParameterParser
 
 The best example of how a ``ParameterParser`` works is the ``BooleanParser``:
 
@@ -338,7 +333,7 @@ public class BooleanParser extends ParameterParser<Boolean> {
 }
 ````
 
-### Register new Parser
+## Register ParameterParser
 
 To register a new Parser to the environment simply use:
 
