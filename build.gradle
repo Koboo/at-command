@@ -3,7 +3,6 @@ import org.apache.tools.ant.filters.ReplaceTokens
 plugins {
     id 'java'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
-    id 'maven-publish'
 }
 
 subprojects {
@@ -80,7 +79,7 @@ subprojects {
     publishing {
         repositories {
             maven {
-                url = 'https://reposilite.koboo.eu/binflux'
+                url = 'https://reposilite.koboo.eu/releases'
                 credentials {
                     username = System.getenv('REPO_USER')
                     password = System.getenv('REPO_TOKEN')
