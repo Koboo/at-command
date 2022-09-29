@@ -4,7 +4,6 @@ import eu.koboo.atcommand.annotations.command.Global;
 import eu.koboo.atcommand.annotations.command.Label;
 import eu.koboo.atcommand.annotations.command.ShowHelpWithError;
 import eu.koboo.atcommand.annotations.method.Subcommand;
-import dev.binflux.atcommand.annotations.method.types.*;
 import eu.koboo.atcommand.annotations.method.types.*;
 import eu.koboo.atcommand.annotations.options.Access;
 import eu.koboo.atcommand.annotations.options.MergeText;
