@@ -51,6 +51,32 @@ subprojects {
         ]
     }
 
+    task buildPlugin(type: Copy) {
+        if(project.name.equalsIgnoreCase("core")) {
+            return;
+        }
+        var outputDir = rootProject.projectDir.getAbsolutePath() + "/output/"
+        var targetName = project.name + "-${projectVersion}-all.jar"
+        var finalName = "at-command-" + targetName
+        // Delete previous build jar
+        delete outputDir + finalName
+
+        // Copy current build jar
+        from 'build/libs/'
+        into outputDir
+
+        include targetName
+        rename { String fileName ->
+            fileName.replace(targetName, finalName)
+        }
+    }
+    shadowJar.finalizedBy buildPlugin
+
+    task deleteOutput() {
+        delete rootProject.projectDir.getAbsolutePath() + "/output"
+    }
+    clean.finalizedBy deleteOutput
+
     publishing {
         repositories {
             maven {
