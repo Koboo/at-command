@@ -4,3 +4,4 @@ dependencies {
     compileOnly project(':core')
     compileOnly project(':bukkit-plugin')
 }
+

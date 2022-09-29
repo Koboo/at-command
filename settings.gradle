@@ -2,5 +2,5 @@ rootProject.name = 'at-command'
 include 'core'
 include 'bungee-plugin'
 include 'bukkit-plugin'
-include 'test-bukkit-plugin'
+include 'bukkit-plugin-test'
 
