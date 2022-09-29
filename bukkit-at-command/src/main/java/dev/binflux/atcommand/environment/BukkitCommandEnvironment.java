@@ -79,9 +79,9 @@ public class BukkitCommandEnvironment extends CommandEnvironment {
         String label = aliasList.get(0);
         aliasList.remove(0);
         BukkitRootCommand rootCommand = new BukkitRootCommand(this, label);
-        commandMap.register("at-command", rootCommand);
+        commandMap.register("commands", rootCommand);
         for (String alias : commandMeta.getAliasList()) {
-            commandMap.register(alias, "at-command", rootCommand);
+            commandMap.register(alias, "commands", rootCommand);
         }
     }
 }
