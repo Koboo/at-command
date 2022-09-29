@@ -51,14 +51,10 @@ subprojects {
         ]
     }
 
-    task createPluginFile {
-        def template
-    }
-
     publishing {
         repositories {
             maven {
-                url = 'https://repo.koboo.eu/binflux'
+                url = 'https://reposilite.koboo.eu/binflux'
                 credentials {
                     username = System.getenv('REPO_USER')
                     password = System.getenv('REPO_TOKEN')

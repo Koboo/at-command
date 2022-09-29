@@ -1,6 +1,7 @@
 dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.19-R0.1-SNAPSHOT'
 
+    implementation "org.reflections:reflections:$reflectionsVersion"
     implementation "org.jetbrains:annotations:$jetbrainsAnnotationsVersion"
     implementation project(':core-at-command')
 }
