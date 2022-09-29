@@ -1,5 +1,6 @@
 package eu.koboo.atcommand.environment;
 
+import eu.koboo.atcommand.annotations.command.Global;
 import eu.koboo.atcommand.annotations.command.Label;
 import eu.koboo.atcommand.annotations.dependency.Dependency;
 import eu.koboo.atcommand.environment.meta.CommandMeta;
@@ -95,7 +96,14 @@ public abstract class CommandEnvironment implements Environment {
         Reflections reflections = new Reflections(new ConfigurationBuilder().filterInputsBy(filterBuilder));
 
         Set<Class<?>> commandClasses = reflections.get(Scanners.TypesAnnotated.with(Label.class).asClass());
-        if(commandClasses == null || commandClasses.isEmpty()) {
+        if(commandClasses == null) {
+            commandClasses = new HashSet<>();
+        }
+        Set<Class<?>> globalCommandClasses = reflections.get(Scanners.TypesAnnotated.with(Global.class).asClass());
+        commandClasses.addAll(globalCommandClasses);
+        globalCommandClasses.clear();
+
+        if(commandClasses.isEmpty()) {
             return;
         }
 
