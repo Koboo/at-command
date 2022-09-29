@@ -14,16 +14,19 @@ import dev.binflux.atcommand.environment.meta.MethodMeta;
 import dev.binflux.atcommand.environment.utilities.OrderComparator;
 import dev.binflux.atcommand.exceptions.InvalidCommandException;
 import dev.binflux.atcommand.parser.ParameterParser;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.*;
 
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CommandResolver {
 
-    private final CommandEnvironment environment;
+    CommandEnvironment environment;
 
     public <T> CommandMeta resolveCommand(Class<T> commandClass) throws InvalidCommandException {
         String className = commandClass.getName();
