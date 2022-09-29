@@ -1,5 +1,7 @@
 package dev.binflux.atcommand.environment;
 
+import dev.binflux.atcommand.annotations.command.Label;
+import dev.binflux.atcommand.annotations.dependency.Dependency;
 import dev.binflux.atcommand.environment.meta.CommandMeta;
 import dev.binflux.atcommand.environment.meta.CommandSyntax;
 import dev.binflux.atcommand.environment.meta.MethodMeta;
@@ -8,24 +10,39 @@ import dev.binflux.atcommand.exceptions.InvalidCommandException;
 import dev.binflux.atcommand.exceptions.ParameterException;
 import dev.binflux.atcommand.parser.ParameterParser;
 import dev.binflux.atcommand.parser.types.*;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
+import org.reflections.Reflections;
+import org.reflections.scanners.Scanners;
+import org.reflections.util.ConfigurationBuilder;
+import org.reflections.util.FilterBuilder;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 import java.util.*;
 
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public abstract class CommandEnvironment implements Environment {
 
-    private final CommandResolver commandResolver;
-    private final Map<Object, CommandMeta> commandRegistry;
-    private final Map<Class<?>, ParameterParser<?>> parserRegistry;
+    CommandResolver commandResolver;
+    Map<Object, CommandMeta> commandRegistry;
+    Map<Class<?>, ParameterParser<?>> parserRegistry;
+    Map<Class<?>, Object> dependencyRegistry;
 
-    private Object globalCommand;
-    private CommandMeta globalCommandMeta;
+    @NonFinal
+    Object globalCommand;
+    @NonFinal
+    CommandMeta globalCommandMeta;
 
     public CommandEnvironment() {
 
         commandResolver = new CommandResolver(this);
         commandRegistry = new HashMap<>();
         parserRegistry = new HashMap<>();
+        dependencyRegistry = new HashMap<>();
 
         registerParser(new BooleanParser());
         registerParser(new DateParser());
@@ -44,6 +61,82 @@ public abstract class CommandEnvironment implements Environment {
     }
 
     @Override
+    public <D> void addDependency(D object) {
+        // Register the given instance of the object as dependency for commands
+        Class<?> objectClass = object.getClass();
+        if(dependencyRegistry.containsKey(objectClass)) {
+            throw new IllegalStateException("Dependency of " + objectClass.getName() + " is already registered!");
+        }
+        dependencyRegistry.put(objectClass, object);
+    }
+
+    @Override
+    public <D> D getDependency(Class<D> dependencyClass) {
+        // Return the instance of the given dependency class
+        if(!dependencyRegistry.containsKey(dependencyClass)) {
+            return null;
+        }
+        Object dependency = dependencyRegistry.get(dependencyClass);
+        return dependencyClass.cast(dependency);
+    }
+
+    @Override
+    public void registerCommandsIn(String... packageNames) {
+        FilterBuilder filterBuilder = new FilterBuilder();
+        for (String packageName : packageNames) {
+            filterBuilder.includePackage(packageName);
+        }
+        Reflections reflections = new Reflections(new ConfigurationBuilder().filterInputsBy(filterBuilder));
+
+        Set<Class<?>> commandClasses = reflections.get(Scanners.TypesAnnotated.with(Label.class).asClass());
+        if(commandClasses == null || commandClasses.isEmpty()) {
+            return;
+        }
+
+        for (Class<?> commandClass : commandClasses) {
+
+            // Search for the required no-args constructor
+            Constructor<?>[] constructorArray = commandClass.getDeclaredConstructors();
+            if(constructorArray.length == 0) {
+                throw new NullPointerException("Couldn't find any constructor in " + commandClass.getName());
+            }
+            Constructor<?> constructor = constructorArray[0];
+            if(constructor.getParameterCount() > 0) {
+                throw new IllegalArgumentException("Constructor of " + commandClass.getName() + " isn't allowed to have parameters!");
+            }
+            if(!Modifier.isPublic(constructor.getModifiers())) {
+                throw new IllegalStateException("Constructor of " + commandClass.getName() + " isn't public and can't get accessed.");
+            }
+
+            // Create the instance of the command
+            try {
+                Object command = constructor.newInstance();
+
+                // Check for dependencies in the fields.
+                for (Field declaredField : commandClass.getDeclaredFields()) {
+                    if(!declaredField.isAnnotationPresent(Dependency.class)) {
+                        continue;
+                    }
+                    Class<?> fieldClass = declaredField.getType();
+                    Object dependency = getDependency(fieldClass);
+                    if(!dependencyRegistry.containsKey(fieldClass) || dependency == null) {
+                        throw new NullPointerException("Couldn't find dependency of " + commandClass.getName() + " in registry!");
+                    }
+                    declaredField.setAccessible(true);
+                    declaredField.set(command, dependency);
+                    declaredField.setAccessible(false);
+                }
+
+                // Register the command as usual
+                registerCommand(command);
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                throw new RuntimeException("Exception while instantiating command " + commandClass.getName() + ": ", e);
+            }
+        }
+        commandClasses.clear();
+    }
+
+    @Override
     public <T> void registerCommand(T command) {
         Class<?> commandClass = command.getClass();
         try {
@@ -56,7 +149,7 @@ public abstract class CommandEnvironment implements Environment {
             commandRegistry.put(command, commandMeta);
             afterRegistration(command, commandMeta);
         } catch (InvalidCommandException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Exception while registering command " + commandClass.getName() + ": ", e);
         }
     }
 

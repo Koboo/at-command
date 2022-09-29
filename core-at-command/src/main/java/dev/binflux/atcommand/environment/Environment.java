@@ -15,6 +15,12 @@ public interface Environment {
 
     <S> boolean hasNotPermission(S sender, String permission);
 
+    <D> void addDependency(D object);
+
+    <D> D getDependency(Class<D> dependencyClass);
+
+    void registerCommandsIn(String... packageNames);
+
     <C> void registerCommand(C command);
 
     <C> void afterRegistration(C command, CommandMeta commandMeta);
