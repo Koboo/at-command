@@ -7,8 +7,8 @@ import eu.koboo.atcommand.annotations.method.types.Default;
 import eu.koboo.atcommand.conditions.Cond;
 import org.bukkit.entity.Player;
 
-@Label("test")
-@Label("secondtest")
+@Label("testcommand")
+@Label("testalias")
 @ShowHelpWithError
 public class TestCommand {
 
@@ -26,5 +26,10 @@ public class TestCommand {
     public void onInformation(Player player) {
         Cond.check(player.getName().equalsIgnoreCase("Koboo"), "Your name is Koboo, so the condition is true.");
         player.sendMessage("Information");
+    }
+
+    @Subcommand("primitives")
+    public void onPrimitive(Player player, int primitive) {
+        player.sendMessage("It's a primitive!");
     }
 }
