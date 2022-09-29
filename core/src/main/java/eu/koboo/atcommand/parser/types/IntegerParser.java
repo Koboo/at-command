@@ -1,9 +1,15 @@
 package eu.koboo.atcommand.parser.types;
 
+import com.sun.java.swing.plaf.windows.WindowsTextAreaUI;
 import eu.koboo.atcommand.exceptions.ParameterException;
 import eu.koboo.atcommand.parser.ParameterParser;
 
 public class IntegerParser extends ParameterParser<Integer> {
+
+    @Override
+    public Class<?>[] getExtraTypes() {
+        return new Class[]{int.class};
+    }
 
     @Override
     public Integer parse(String value) throws ParameterException {

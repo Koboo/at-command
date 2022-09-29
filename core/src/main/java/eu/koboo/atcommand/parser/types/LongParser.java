@@ -6,6 +6,11 @@ import eu.koboo.atcommand.parser.ParameterParser;
 public class LongParser extends ParameterParser<Long> {
 
     @Override
+    public Class<?>[] getExtraTypes() {
+        return new Class[]{long.class};
+    }
+
+    @Override
     public Long parse(String value) throws ParameterException {
         try {
             return Long.valueOf(value);

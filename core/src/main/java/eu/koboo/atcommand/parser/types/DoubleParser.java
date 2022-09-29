@@ -6,6 +6,11 @@ import eu.koboo.atcommand.parser.ParameterParser;
 public class DoubleParser extends ParameterParser<Double> {
 
     @Override
+    public Class<?>[] getExtraTypes() {
+        return new Class[]{double.class};
+    }
+
+    @Override
     public Double parse(String value) throws ParameterException {
         try {
             return Double.valueOf(value);

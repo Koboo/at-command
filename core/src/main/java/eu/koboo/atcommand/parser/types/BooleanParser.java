@@ -20,6 +20,11 @@ public class BooleanParser extends ParameterParser<Boolean> {
     }
 
     @Override
+    public Class<?>[] getExtraTypes() {
+        return new Class[]{boolean.class};
+    }
+
+    @Override
     public Boolean parse(String value) throws ParameterException {
         if(value.equalsIgnoreCase("yes")
                 || value.equalsIgnoreCase("1")

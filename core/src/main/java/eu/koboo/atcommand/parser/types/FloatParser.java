@@ -6,6 +6,11 @@ import eu.koboo.atcommand.parser.ParameterParser;
 public class FloatParser extends ParameterParser<Float> {
 
     @Override
+    public Class<?>[] getExtraTypes() {
+        return new Class[]{float.class};
+    }
+
+    @Override
     public Float parse(String value) throws ParameterException {
         try {
             return Float.valueOf(value);

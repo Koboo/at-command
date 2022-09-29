@@ -6,6 +6,11 @@ import eu.koboo.atcommand.parser.ParameterParser;
 public class ShortParser extends ParameterParser<Short> {
 
     @Override
+    public Class<?>[] getExtraTypes() {
+        return new Class[]{short.class};
+    }
+
+    @Override
     public Short parse(String value) throws ParameterException {
         try {
             return Short.valueOf(value);

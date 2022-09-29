@@ -149,10 +149,6 @@ public class CommandResolver {
         // Get parameter types and index of method
         Map<Integer, Class<?>> parameterIndex = new HashMap<>();
         for (Parameter parameter : method.getParameters()) {
-            if(parameter.getType().isPrimitive()) {
-                throw new InvalidCommandException(className + " method " + methodName +
-                        " has a primitive type of " + parameter.getType().getName() + " but it's not allowed!");
-            }
             parameterIndex.put(parameterIndex.size(), parameter.getType());
         }
         if (parameterIndex.isEmpty()) {

@@ -186,13 +186,25 @@ public abstract class CommandEnvironment implements Environment {
 
     @Override
     public void registerParser(ParameterParser<?> parameterParser, boolean override) {
+        addParserByType(parameterParser, parameterParser.getType(), override);
+        Class<?>[] extraTypes = parameterParser.getExtraTypes();
+        if(extraTypes == null || extraTypes.length == 0) {
+            return;
+        }
+        for (Class<?> extraType : extraTypes) {
+            addParserByType(parameterParser, extraType, override);
+        }
+    }
+
+    public void addParserByType(ParameterParser<?> parameterParser, Class<?> type, boolean override) {
         if (override) {
-            parserRegistry.remove(parameterParser.getType());
+            parserRegistry.remove(type);
         }
-        if (parserRegistry.containsKey(parameterParser.getType())) {
-            throw new IllegalStateException(parameterParser.getClass().getName() + " is already registered in ParserRegistry!");
+        if (parserRegistry.containsKey(type)) {
+            throw new IllegalStateException("Parser " + parameterParser.getClass().getName() + " for type " +
+                    type.getName() + " is already registered!");
         }
-        parserRegistry.put(parameterParser.getType(), parameterParser);
+        parserRegistry.put(type, parameterParser);
     }
 
     @Override

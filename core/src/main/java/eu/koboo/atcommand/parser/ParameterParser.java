@@ -34,4 +34,8 @@ public abstract class ParameterParser<T> {
         return ((Class<T>) ((ParameterizedType) getClass()
                 .getGenericSuperclass()).getActualTypeArguments()[0]);
     }
+
+    public Class<?>[] getExtraTypes() {
+        return null;
+    }
 }
