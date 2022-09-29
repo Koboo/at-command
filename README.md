@@ -48,6 +48,7 @@ dependencies {
 
 First of all you need to set the ``@Label`` of the command. You can use the annotation multiple times, 
 to set multiple aliases.
+
 **_Code-Example:_**
 ````java
 @Label("testcommand")
@@ -68,6 +69,7 @@ You can create a ``@Global`` command with the handler-methods of the following a
 The handler-methods can also be created in the individual commands. 
 If a command has its own handler-method, this one will be executed instead of the method from the ``@Global`` command. 
 Attention, the parameters of these methods are required by AtCommand!
+
 **_Code-Example:_**
 ````java
 @Global
@@ -195,6 +197,7 @@ There are two ways to do this, via the CommandEnvironment.
 1. **Instance registration:**
 
 If you want to create the instance of the command yourself, you can register it using the following method:
+
 **_Code-Example:_**
 ````java
 public class TestPlugin extends JavaPlugin {
@@ -263,6 +266,7 @@ Bukkit-related:
 
 The best example of how a ``ParameterParser`` works is the ``BooleanParser``:
 
+**_Code-Example:_**
 ````java
 // The type of the Parser stands in the brackets <>. 
 // In this example it's a Boolean.
@@ -338,6 +342,7 @@ public class BooleanParser extends ParameterParser<Boolean> {
 
 To register a new Parser to the environment simply use:
 
+**_Code-Example:_**
 ````java
 public class TestPlugin extends JavaPlugin {
     public void onEnable() {
@@ -349,6 +354,7 @@ public class TestPlugin extends JavaPlugin {
 
 You can also override Parsers. If you don't override and the type already has a Parser, an exception is thrown.
 
+**_Code-Example:_**
 ````java
 public class TestPlugin extends JavaPlugin {
     public void onEnable() {
