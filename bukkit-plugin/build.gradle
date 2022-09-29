@@ -3,7 +3,7 @@ dependencies {
 
     implementation "org.reflections:reflections:$reflectionsVersion"
     implementation "org.jetbrains:annotations:$jetbrainsAnnotationsVersion"
-    implementation project(':core-at-command')
+    implementation project(':core')
 }
 
 task buildPlugin(type: Copy) {

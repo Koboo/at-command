@@ -1,0 +1,7 @@
+name: AtCommandTest
+version: @PROJECT_VERSION@
+author: @PLUGIN_AUTHOR@
+main: eu.koboo.atcommand.test.TestPlugin
+load: STARTUP
+api-version: 1.13
+commands:

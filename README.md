@@ -7,7 +7,6 @@ the command class or the methods within the class.
 ## Overview
 
 * [Dependency](#dependency)
-* [Upcoming Features](#upcoming-features)
 * [Command Annotations](#command-annotations)
 * [Method Annotations](#method-annotations)
 * [Option Annotations](#option-annotations)
@@ -33,9 +32,14 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'dev.binflux:core-at-command:1.0'
-    compileOnly 'dev.binflux:bungee-at-command:1.0'
-    compileOnly 'dev.binflux:bukkit-at-command:1.0'
+    /* Required for both platforms */
+    compileOnly 'eu.koboo.atcommand:core:1.0'
+    
+    /* For Bungeecord usage */
+    compileOnly 'eu.koboo.atcommand:bungee-plugin:1.0'
+    
+    /* For Bukkit usage */
+    compileOnly 'eu.koboo.atcommand:bukkit-plugin:1.0'
 }
 ```
 ## Usage

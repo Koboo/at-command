@@ -12,8 +12,8 @@ subprojects {
     apply plugin: 'com.github.johnrengelman.shadow'
     apply plugin: 'maven-publish'
 
-    group 'dev.binflux'
-    version "${projectVersion}"
+    group 'eu.koboo.atcommand'
+    version "$projectVersion"
 
     repositories {
         mavenCentral()
@@ -44,10 +44,10 @@ subprojects {
 
     processResources {
         filter ReplaceTokens, tokens: [
-            "PROJECT_VERSION": "${projectVersion}".toString(),
+            "PROJECT_VERSION": "$projectVersion".toString(),
             "PROJECT_NAME": project.name.toString(),
-            "PLUGIN_AUTHOR": "${pluginAuthor}".toString(),
-            "PLUGIN_MAIN": "${pluginMain}".toString()
+            "PLUGIN_AUTHOR": "$pluginAuthor".toString(),
+            "PLUGIN_MAIN": "$pluginMain".toString()
         ]
     }
 
