@@ -1,11 +1,10 @@
 package eu.koboo.atcommand.test.global;
 
 import eu.koboo.atcommand.annotations.command.Global;
-import eu.koboo.atcommand.annotations.command.Label;
-import eu.koboo.atcommand.annotations.command.ShowHelpWithError;
-import eu.koboo.atcommand.annotations.method.Subcommand;
-import eu.koboo.atcommand.annotations.method.types.*;
-import eu.koboo.atcommand.conditions.Cond;
+import eu.koboo.atcommand.annotations.method.types.NoPermission;
+import eu.koboo.atcommand.annotations.method.types.OnError;
+import eu.koboo.atcommand.annotations.method.types.OnHelp;
+import eu.koboo.atcommand.annotations.method.types.WrongSender;
 import eu.koboo.atcommand.environment.meta.CommandSyntax;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

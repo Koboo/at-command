@@ -1,6 +1,5 @@
 package eu.koboo.atcommand.parser.types;
 
-import com.sun.java.swing.plaf.windows.WindowsTextAreaUI;
 import eu.koboo.atcommand.exceptions.ParameterException;
 import eu.koboo.atcommand.parser.ParameterParser;
 
