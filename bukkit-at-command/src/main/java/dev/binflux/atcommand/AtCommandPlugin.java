@@ -19,6 +19,7 @@ public class AtCommandPlugin extends JavaPlugin {
     @Override
     public void onLoad() {
         environment = new BukkitCommandEnvironment(this);
+        environment.addDependency(environment);
         log.info("Initialized " + BukkitCommandEnvironment.class.getName() + "!");
         super.onLoad();
     }
@@ -27,12 +28,17 @@ public class AtCommandPlugin extends JavaPlugin {
     public void onEnable() {
         Bukkit.getPluginManager().registerEvents(new PlayerCommandPreprocessListener(environment), this);
         Bukkit.getPluginManager().registerEvents(new ServerCommandListener(environment), this);
+        log.info("Registered listeners for " + BukkitCommandEnvironment.class.getName() + "!");
         environment.registerCommand(new TestCommand());
         super.onEnable();
     }
 
     @Override
     public void onDisable() {
+        if(environment != null) {
+            environment.destroy();
+        }
+        log.info("Destroyed " + BukkitCommandEnvironment.class.getName() + "!");
         super.onDisable();
     }
 }

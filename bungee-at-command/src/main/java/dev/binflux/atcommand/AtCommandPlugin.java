@@ -18,6 +18,7 @@ public class AtCommandPlugin extends Plugin {
     @Override
     public void onLoad() {
         environment = new BungeeCommandEnvironment(this);
+        environment.addDependency(environment);
         log.info("Initialized " + BungeeCommandEnvironment.class.getName() + "!");
         super.onLoad();
     }
@@ -25,11 +26,16 @@ public class AtCommandPlugin extends Plugin {
     @Override
     public void onEnable() {
         ProxyServer.getInstance().getPluginManager().registerListener(this, new TabCompleteListener(environment));
+        log.info("Registered listeners for " + BungeeCommandEnvironment.class.getName() + "!");
         super.onEnable();
     }
 
     @Override
     public void onDisable() {
+        if(environment != null) {
+            environment.destroy();
+        }
+        log.info("Destroyed " + BungeeCommandEnvironment.class.getName() + "!");
         super.onDisable();
     }
 }

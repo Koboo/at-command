@@ -60,6 +60,12 @@ public abstract class CommandEnvironment implements Environment {
         return parserRegistry;
     }
 
+    public void destroy() {
+        commandRegistry.clear();
+        parserRegistry.clear();
+        dependencyRegistry.clear();
+    }
+
     @Override
     public <D> void addDependency(D object) {
         // Register the given instance of the object as dependency for commands
