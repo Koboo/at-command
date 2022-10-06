@@ -1,20 +1,27 @@
 # _**// AtCommand**_
 
-AtCommand is a framework for creating Bukkit and Bungeecord commands.
-The framework uses annotations for simplification, which are written over
-the command class or the methods within the class.
+AtCommand is a framework to create Bukkit and BungeeCord commands via annotations.
 
 ## Overview
 
-* [Dependency](#dependency)
-* [Get Started](#get-started)
-* [Methods](#methods)
-* [Permissions](#permissions)
-* [Help](#help)
-* [Register Commands](#register-commands)
-* [Default Argument Parser](#default-argument-parsers)
-* [Create Parser](#create-parameterparser)
-* [Register Parser](#register-parameterparser)
+- [Features](#features)
+- [Dependency](#dependency)
+- [Get Started](#get-started)
+- [Methods](#methods)
+- [Permissions](#permissions)
+- [Help](#help)
+- [Register Commands](#register-commands)
+- [Default Argument Parser](#default-argument-parsers)
+- [Create Parser](#create-parameterparser)
+- [Register Parser](#register-parameterparser)
+
+### Features
+
+- Command creation via annotations
+- Multiple labels
+- Permissions for commands and subcommands
+- Automatic registration by package names
+- Dynamic tab-completion of every command
 
 ### Dependency
 
