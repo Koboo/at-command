@@ -16,6 +16,7 @@ the command class or the methods within the class.
 * [Default Argument Parser](#default-argument-parsers)
 * [Create own Parser](#create-own-parser)
 * [Register new Parser](#register-new-parser)
+* [License](/LICENSE)
 
 ### Dependency
 
@@ -309,6 +310,8 @@ Java-related:
 Bukkit-related:
 * ``GameModeParser``
 * ``WorldParser``
+
+Also, if there are no other suggestions, all player names are automatically added as suggestions.
 
 ### Create own Parser
 
