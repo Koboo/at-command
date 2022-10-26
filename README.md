@@ -14,7 +14,7 @@ AtCommand is a framework to create Bukkit and BungeeCord commands via annotation
 - [Default Argument Parser](#default-argument-parsers)
 - [Create Parser](#create-parameterparser)
 - [Register Parser](#register-parameterparser)
-* [License](/LICENSE)
+- [License](/LICENSE)
 
 ### Features
 
