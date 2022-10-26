@@ -4,6 +4,7 @@ import eu.koboo.atcommand.annotations.command.Label;
 import eu.koboo.atcommand.annotations.command.ShowHelpWithError;
 import eu.koboo.atcommand.annotations.method.Subcommand;
 import eu.koboo.atcommand.annotations.method.types.Default;
+import eu.koboo.atcommand.annotations.options.Access;
 import eu.koboo.atcommand.conditions.Cond;
 import org.bukkit.entity.Player;
 
@@ -31,5 +32,11 @@ public class TestCommand {
     @Subcommand("primitives")
     public void onPrimitive(Player player, int primitive) {
         player.sendMessage("It's a primitive!");
+    }
+
+    @Subcommand("noperm")
+    @Access("test-plugin.noperm")
+    public void hasNotPermission(Player player) {
+        player.sendMessage("You've permission!");
     }
 }
