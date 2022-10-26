@@ -1,22 +1,28 @@
 # _**// AtCommand**_
 
-AtCommand is a framework for creating Bukkit and Bungeecord commands.
-The framework uses annotations for simplification, which are written over
-the command class or the methods within the class.
+AtCommand is a framework to create Bukkit and BungeeCord commands via annotations.
 
 ## Overview
 
-* [Dependency](#dependency)
-* [Upcoming Features](#upcoming-features)
-* [Command Annotations](#command-annotations)
-* [Method Annotations](#method-annotations)
-* [Option Annotations](#option-annotations)
-* [Create Commands](#create-commands)
-* [Register Commands](#register-commands)
-* [Default Argument Parser](#default-argument-parsers)
-* [Create own Parser](#create-own-parser)
-* [Register new Parser](#register-new-parser)
+- [Features](#features)
+- [Dependency](#dependency)
+- [Get Started](#get-started)
+- [Methods](#methods)
+- [Permissions](#permissions)
+- [Help](#help)
+- [Register Commands](#register-commands)
+- [Default Argument Parser](#default-argument-parsers)
+- [Create Parser](#create-parameterparser)
+- [Register Parser](#register-parameterparser)
 * [License](/LICENSE)
+
+### Features
+
+- Command creation via annotations
+- Multiple labels
+- Permissions for commands and subcommands
+- Automatic registration by package names
+- Dynamic tab-completion of every command
 
 ### Dependency
 
@@ -28,273 +34,221 @@ but can also support other build systems like [Maven](https://maven.apache.org/)
 ```groovy
 repositories {
     maven {
-        url 'https://repo.koboo.eu/binflux'
-        credentials {
-            username System.getenv('REPO_USER')
-            password System.getenv('REPO_TOKEN')
-        }
+        name 'koboo-reposilite'
+        url 'https://reposilite.koboo.eu/releases'
     }
 }
 
 dependencies {
-    compileOnly 'dev.binflux:core-at-command:1.0'
-    compileOnly 'dev.binflux:bungee-at-command:1.0'
-    compileOnly 'dev.binflux:bukkit-at-command:1.0'
+    /* Required for both platforms */
+    compileOnly 'eu.koboo.atcommand:core:1.2.1'
+    
+    /* For Bungeecord usage */
+    compileOnly 'eu.koboo.atcommand:bungee-plugin:1.2.1'
+    
+    /* For Bukkit usage */
+    compileOnly 'eu.koboo.atcommand:bukkit-plugin:1.2.1'
 }
 ```
+## Get Started
 
-### Upcoming Features
+First of all you need to set the ``@Label`` of the command. You can use the annotation multiple times, 
+to set multiple aliases.
 
-* ``@Usage("<argument> [optional] whatever")`` annotation for method to define unique usage/help messages
-* Bukkit auto-completion without dependencies and without reflections
-
-## Usage
-
-### Command Annotations
-
-Set command and aliases:
-* ``@Alias(alias = {"command", "labels", "here"}``
-
-Execute ``OnHelp``-method if no ``OnError``-method is defined:
-* ``@ShowHelpOnError``
-
-Execute ``OnHelp``-method before the ``OnError``-method is executed:
-* ``@ShowHelpWithError``
-
-Create global methods for ``OnHelp``, ``OnError``, ``WrongSender`` and ``NoPermission``:
-* ``@Global``
-
-### Method Annotations
-
-Set the method for command without arguments:
-* ``@Default``
-* ``(Sender sender)``
-
-Set the method for no permissions:
-* ``@NoPermission``
-* ``(Sender sender, String missingPermission, String executedSyntax)``
-
-Set the method for error handling:
-* ``@OnError``
-* ``(Sender sender, String errorMessage)``
-
-Set the method for help-printing:
-* ``@OnHelp``
-* ``(Sender sender, CommandHelp commandHelp)``
-
-Set the methods sub-command:
-* ``@Subcommand``
-* ``(Sender sender/*, other arguments go here.*/)``
-
-Set the method for wrong sender type:
-* ``@WrongSender``
-* ``(Sender sender)``
-
-### Option Annotations
-
-Set a custom permission:
-* ``@Access(value = "permission.goes.here")``
-
-Execute the command async:
-* ``@Async``
-
-Concat the arguments to one big ``String``:
-* ``@Messages``
-
-Modify the parsing and execution order:
-* ``@Order(99)``
-
-### Create Commands
-
-* Create a new class and annotate with ``@Alias``
+**_Code-Example:_**
 ````java
-@Alias(alias = {"example", "examplecommand"})
-public class ExampleCommand {
-    
+@Label("testcommand")
+@Label("testalias")
+public class TestCommand {
 }
 ````
 
-* Create a method for command without arguments ``/example`` with ``@Default``
-````java
-@Alias(alias = {"example", "examplecommand"})
-public class ExampleCommand {
-    
-    @Default
-    public void onDefault(CommandSender sender) {
-        // Do something with the sender...
-        sender.sendMessage("You executed /example!");
-    }
-}
-````
+You can create a ``@Global`` command with the handler-methods of the following annotations 
+- ``@OnHelp``
+- ``@OnError``
+- ``@WrongSender``
+- ``@NoPermission`` 
 
-* Create a method for showing help messages with ``@OnHelp``
+The handler-methods can also be created in the individual commands. 
+If a command has its own handler-method, this one will be executed instead of the method from the ``@Global`` command. 
+Attention, the parameters of these methods are required by AtCommand!
+
+**_Code-Example:_**
 ````java
-@Alias(alias = {"example", "examplecommand"})
-public class ExampleCommand {
-    
-    @Default
-    public void onDefault(CommandSender sender) {
-        // Do something with the sender...
-        sender.sendMessage("You executed /example!");
+@Global
+public class TestGlobalCommand {
+
+    @WrongSender
+    public void wrongSender(CommandSender sender) {
+        if(sender instanceof Player) {
+            sender.sendMessage("You're not console!");
+        } else {
+            sender.sendMessage("You're not a player!");
+        }
     }
-    
+
     @OnHelp
-    public void onHelp(CommandSender sender, CommandHelp commandHelp) {
-        // The executed command (or alias) without leading "/"
-        Stirng command = commandHelp.getLabel();
-        
-        // The possible syntax, which can be executed
-        List<String> commandSyntax = commandHelp.getSyntaxList();
+    public void onHelp(CommandSender sender, String command, List<CommandSyntax> syntaxList) {
+        sender.sendMessage("Help of /" + command + ":");
+        for (CommandSyntax syntax : syntaxList) {
+            sender.sendMessage("Usage: /" + command + " " + syntax.getSyntax());
+        }
     }
-}
-````
 
-* Now we can replace ``@Default`` with ``@OnHelp``, just annotate the command with ``@ShowHelpOnDefault``
-````java
-@Alias(alias = {"example", "examplecommand"})
-public class ExampleCommand {
-    
-    @OnHelp
-    public void onHelp(CommandSender sender, CommandHelp commandHelp) {
-        // The executed command (or alias) without leading "/"
-        String command = commandHelp.getLabel();
-        
-        // The possible syntax, which can be executed
-        List<String> commandSyntax = commandHelp.getSyntaxList();
-    }
-}
-````
-
-* Create a method for errors and show help with errors.
-````java
-@Alias(alias = {"example", "examplecommand"})
-@ShowHelpWithError
-public class ExampleCommand {
-    
-    @OnHelp
-    public void onHelp(CommandSender sender, CommandHelp commandHelp) {
-        // The executed command (or alias) without leading "/"
-        Stirng command = commandHelp.getLabel();
-        
-        // The possible syntax, which can be executed
-        List<String> commandSyntax = commandHelp.getSyntaxList();
-    }
-    
     @OnError
     public void onError(CommandSender sender, String error) {
-        sender.sendMessage("You got an error: " + error);
+        String addition = error  == null ? "" : " (" + error + ")";
+        sender.sendMessage("An internal error occurred." + addition);
     }
-}
-````
 
-* The ``@OnError`` method can also be replaced by ``@OnHelp`` with ``@ShowHelpOnError``
-````java
-@Alias(alias = {"example", "examplecommand"})
-@ShowHelpOnError
-public class ExampleCommand {
-    
-    @OnHelp
-    public void onHelp(CommandSender sender, CommandHelp commandHelp) {
-        // The executed command (or alias) without leading "/"
-        Stirng command = commandHelp.getLabel();
-        
-        // The possible syntax, which can be executed
-        List<String> commandSyntax = commandHelp.getSyntaxList();
-    }
-}
-````
-
-
-* Create a method for no permissions.
-````java
-@Alias(alias = {"example", "examplecommand"})
-@ShowHelpOnError
-public class ExampleCommand {
-    
-    @OnHelp
-    public void onHelp(CommandSender sender, CommandHelp commandHelp) {
-        // The executed command (or alias) without leading "/"
-        Stirng command = commandHelp.getLabel();
-        
-        // The possible syntax, which can be executed
-        List<String> commandSyntax = commandHelp.getSyntaxList();
-    }
-    
     @NoPermission
     public void noPermission(CommandSender sender, String permission, String command) {
-        sender.sendMessage("You don't have the permission: " + permission);
-        sender.sendMessage("You tried to execute: " + command);
-    }
-}
-````
-* If you remove the ``@NoPermission``-method no action is happening if the ``Sender`` doesn't have permission.
-
-````java
-@Alias(alias = {"example", "examplecommand"})
-@ShowHelpOnError
-public class ExampleCommand {
-    
-    @OnHelp
-    public void onHelp(CommandSender sender, CommandHelp commandHelp) {
-        // The executed command (or alias) without leading "/"
-        Stirng command = commandHelp.getLabel();
-        
-        // The possible syntax, which can be executed
-        List<String> commandSyntax = commandHelp.getSyntaxList();
+        sender.sendMessage("You don't have permission to execute /" + command + "! (Permission: " + permission + ")");
     }
 }
 ````
 
-* Now we can create several sub-commands with and without arguments.
+## Methods
+
+To define methods in a command there are two annotations which allow this.
+
+``@Default`` can define the default command without arguments.
+
+``@Subcommand`` can define multiple subcommands, which are parsed and executed based on the given player arguments.
+
+In addition to the method definition, the parsing of the arguments can be changed. 
+The following annotations are available for this purpose:
+
+``@MergeText`` converts the given arguments to a string. This is passed as a single parameter to the method.
+
+``@Order`` can change the parse order to better find methods depending on arguments. 99% of the time you don't need 
+to use this annotation, but there may be special cases where it can be used. (Smaller order = Higher parsing priority)
+
+**_Code-Example:_**
 ````java
-@Alias(alias = {"example", "examplecommand"})
-@ShowHelpOnError
+@Label("example")
+@Label("thealiasforexample")
+@Label("anotheraliasforthecommand")
 public class ExampleCommand {
     
-    @OnHelp
-    public void onHelp(CommandSender sender, CommandHelp commandHelp) {
-        // The executed command (or alias) without leading "/"
-        Stirng command = commandHelp.getLabel();
-        
-        // The possible syntax, which can be executed
-        List<String> commandSyntax = commandHelp.getSyntaxList();
+    @Default
+    public void onDefault(CommandSender sender) {
+        sender.sendMessage("You executed /example!");
     }
     
-    // Command: "/example subcommand"
+    // Ingame-Command: "/example subcommand"
     @Subcommand("subcommand")
     public void onSubCommand(CommandSender sender) {
-        sender.sendMessage("You executed onSubCommand");
+        sender.sendMessage("You executed /example subcommand");
     }
 
-    // Command: "/example gm <0 | 1 | 2 | 3>"
-    // Command: "/example gm <survival | creative | adventure | spectator>"
-    // (NOTE: GameMode is parsed through GameModeParser)
+    // Ingame-Command: "/example gm <0 | 1 | 2 | 3>"
+    // Ingame-Command: "/example gm <survival | creative | adventure | spectator>"
+    // (NOTE: GameMode is parsed through GameModeParser, @see Parser topic)
     @Subcommand("gm")
     public void onGameMode(Player player, GameMode gameMode) {
-        player.sendMessage("You switched to: " + gameMode.name());
+        player.sendMessage("You switched to " + gameMode.name() + " by executing /example gm <gamemode>");
     }
     
-    // Command: "/example send <Some text with spaces>" 
+    // Ingame-Command: "/example send <Some text with spaces, which need to get merged>" 
     @Subcommand("send")
-    @Message // Concat arguments to text
+    @MergeText // Concat arguments to text
     public void onSend(CommandSender sender, String text) {
-        sender.sendMessage("You send: " + text);
+        sender.sendMessage("You send '" + text + "' by executing /example send <Text>");
     }
 }
 ````
 
-### Register Commands
+## Permissions
 
-If a command needs to get registered, this must be done via the ``Environment``.
+And how can you set specific permissions for a command? Do you have to check them yourself, 
+although there is a ``@NoPermission`` method?
 
+Answer: **No!**
+
+To define permissions you just have to use the ``@Access("permission")`` annotation. 
+
+This works for a command and for methods, even together!
+If a player does not have the permission, the ``@NoPermission`` method is called.
+
+## Help
+
+Since some players might be overwhelmed when an error occurs, and they don't always understand the error text, 
+you can also have the Help method run before the Error method. 
+
+For this you simply have to write ``@ShowHelpWithError`` under the ``@Label`` annotations of the command.
+
+**_Code-Example:_**
 ````java
-Environment environment = KloudAPI.getEnvironment();
-environment.registerCommand(new ExampleCommand());
+@Label("example")
+@Label("thealiasforexample")
+@Label("anotheraliasforthecommand")
+@ShowHelpWithError
+public class ExampleCommand {
+    // ...
+}
 ````
 
-No need to register it through Bukkit, Bungeecord or in their ``plugin.yml``s.
+## Register Commands
 
-### Default Argument Parsers
+You have written your commands and want to register them now? Nice!
+
+There are two ways to do this, via the CommandEnvironment.
+
+**Attention, you must not register the commands via Bukkit, Bungeecord or their ``plugin.yml`` files!**
+
+### (1) **Instance registration:**
+
+If you want to create the instance of the command yourself, you can register it using the following method:
+
+**_Code-Example:_**
+````java
+public class TestPlugin extends JavaPlugin {
+    public void onEnable() {
+        Environment environment = AtCommand.getEnvironment();
+        environment.registerCommand(new ExampleCommand());
+    }
+}
+````
+
+### (2) **Dynamic registration**
+
+You can also create and register command instances via the plugin. Just insert the package names of the commands
+into the method.
+
+Dependency logic can be used to set custom values in the fields of the dynamic commands. 
+
+**To use dynamic registration, the command must have a public no-args constructor!**
+
+**_Code-Example:_**
+````java
+@Label("test")
+// ...
+public class TestCommand {
+    
+    // The manager gets automatically injected by the environment
+    MyDatabaseManager manager;
+    
+    public TestCommand() {
+        // You can also use lomboks "@NoArgsConstructor"
+    }
+    
+    // ...
+}
+
+public class TestPlugin extends JavaPlugin {
+    public void onEnable() {
+        Environment environment = AtCommand.getEnvironment();
+        // Add an instance of the manager to the dependency-registry
+        environment.addDependency(new MyDatabaseManager());
+        
+        // Register all commands in the package "eu.koboo.at.command.test" and "eu.koboo.otherplugin.commands"
+        environment.registerCommandsIn("eu.koboo.atcommand.test", "eu.koboo.otherplugin.commands");
+    }
+}
+````
+
+## Default Argument Parsers
 
 These ``ParameterParser<ObjectToParse>`` are by default added to the environment:
 
@@ -313,10 +267,11 @@ Bukkit-related:
 
 Also, if there are no other suggestions, all player names are automatically added as suggestions.
 
-### Create own Parser
+## Create ParameterParser
 
 The best example of how a ``ParameterParser`` works is the ``BooleanParser``:
 
+**_Code-Example:_**
 ````java
 // The type of the Parser stands in the brackets <>. 
 // In this example it's a Boolean.
@@ -330,6 +285,12 @@ public class BooleanParser extends ParameterParser<Boolean> {
                 "yes", "1", "on", "true", "allow",
                 "no", "0", "off", "false", "disallow"
         ));
+    }
+    
+    // Return all possible parameter types which the parser also knowns.
+    @Override
+    public Class<?>[] getExtraTypes() {
+        return new Class[]{boolean.class};
     }
 
     // In this method the string of the player gets parsed to the desired Type
@@ -382,18 +343,28 @@ public class BooleanParser extends ParameterParser<Boolean> {
 }
 ````
 
-### Register new Parser
+## Register ParameterParser
 
-To register a new created Parser simply use:
+To register a new Parser to the environment simply use:
 
+**_Code-Example:_**
 ````java
-Environment environment = KloudAPI.getEnvironment();
-environment.registerParser(new BooleanParser());
+public class TestPlugin extends JavaPlugin {
+    public void onEnable() {
+        Environment environment = AtCommand.getEnvironment();
+        environment.registerParser(new BooleanParser());
+    }
+}
 ````
 
-You can also override Parser. If you don't don't override and the type already has a Parser, an exception is thrown.
+You can also override Parsers. If you don't override and the type already has a Parser, an exception is thrown.
 
+**_Code-Example:_**
 ````java
-Environment environment = KloudAPI.getEnvironment();
-environment.registerParser(new BooleanParser(), true /*Should the parser be overriden? */);
+public class TestPlugin extends JavaPlugin {
+    public void onEnable() {
+        Environment environment = AtCommand.getEnvironment();
+        environment.registerParser(new BooleanParser(), true /*Should the parser be overriden, if already registered? */);
+    }
+}
 ````

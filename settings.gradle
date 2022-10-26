@@ -1,4 +1,7 @@
 rootProject.name = 'at-command'
-include 'core-at-command'
-include 'bungee-at-command'
-include 'bukkit-at-command'
+include 'bukkit-plugin'
+include 'bukkit-plugin-test'
+include 'bungee-plugin'
+include 'bungee-plugin-test'
+include 'core'
+

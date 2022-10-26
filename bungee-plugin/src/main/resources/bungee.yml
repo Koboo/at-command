@@ -1,0 +1,4 @@
+name: @PROJECT_NAME@
+version: @PROJECT_VERSION@
+author: @PLUGIN_AUTHOR@
+main: @PLUGIN_MAIN@

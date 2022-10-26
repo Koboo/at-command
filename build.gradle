@@ -1,7 +1,7 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 plugins {
-    id 'java'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
-    id 'maven-publish'
 }
 
 subprojects {
@@ -10,8 +10,8 @@ subprojects {
     apply plugin: 'com.github.johnrengelman.shadow'
     apply plugin: 'maven-publish'
 
-    group 'dev.binflux'
-    version "${projectVersion}"
+    group 'eu.koboo.atcommand'
+    version "$projectVersion"
 
     repositories {
         mavenCentral()
@@ -20,16 +20,8 @@ subprojects {
             url 'https://oss.sonatype.org/content/repositories/snapshots'
         }
         maven {
-            name 'koboo-public'
-            url 'https://reposilite.koboo.eu/releases'
-        }
-        maven {
-            name 'koboo-reposilite'
-            url 'https://reposilite.koboo.eu/binflux'
-            credentials {
-                username System.getenv('REPO_USER')
-                password System.getenv('REPO_TOKEN')
-            }
+            name 'spigot-repo'
+            url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
         }
     }
 
@@ -39,28 +31,54 @@ subprojects {
     }
 
     compileJava.options.encoding = 'UTF-8'
-
     tasks.withType(JavaCompile) {
         options.encoding = 'UTF-8'
     }
 
     java {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     processResources {
-        filter {
-            it.replace('PROJECT_VERSION': "${projectVersion}".toString())
-                    .replace('PROJECT_NAME': project.name)
-                    .replace('PROJECT_MAIN': "${pluginMain}")
+        filter ReplaceTokens, tokens: [
+            "PROJECT_VERSION": "$projectVersion".toString(),
+            "PROJECT_NAME": project.name.toString(),
+            "PLUGIN_AUTHOR": "$pluginAuthor".toString(),
+            "PLUGIN_MAIN": "$pluginMain".toString()
+        ]
+    }
+
+    task buildPlugin(type: Copy) {
+        if(project.name.equalsIgnoreCase("core")) {
+            return;
+        }
+        var outputDir = rootProject.projectDir.getAbsolutePath() + "/output/"
+        var targetName = project.name + "-${projectVersion}-all.jar"
+        var finalName = "at-command-" + targetName
+        // Delete previous build jar
+        delete outputDir + finalName
+
+        // Copy current build jar
+        from 'build/libs/'
+        into outputDir
+
+        include targetName
+        rename { String fileName ->
+            fileName.replace(targetName, finalName)
         }
     }
+    shadowJar.finalizedBy buildPlugin
+
+    task deleteOutput() {
+        delete rootProject.projectDir.getAbsolutePath() + "/output"
+    }
+    clean.finalizedBy deleteOutput
 
     publishing {
         repositories {
             maven {
-                url = 'https://repo.koboo.eu/binflux'
+                url = 'https://reposilite.koboo.eu/releases'
                 credentials {
                     username = System.getenv('REPO_USER')
                     password = System.getenv('REPO_TOKEN')

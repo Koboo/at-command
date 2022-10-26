@@ -1,0 +1,4 @@
+dependencies {
+    compileOnly "org.jetbrains:annotations:$jetbrainsAnnotationsVersion"
+    compileOnly "org.reflections:reflections:$reflectionsVersion"
+}

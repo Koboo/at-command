@@ -1,0 +1,5 @@
+name: AtCommandTest
+version: @PROJECT_VERSION@
+author: @PLUGIN_AUTHOR@
+main: eu.koboo.atcommand.test.TestPlugin
+commands:
