@@ -42,13 +42,13 @@ repositories {
 
 dependencies {
     /* Required for both platforms */
-    compileOnly 'eu.koboo.atcommand:core:1.2.1'
+    compileOnly 'eu.koboo.atcommand:core:1.3.0'
 
     /* For Bungeecord usage */
-    compileOnly 'eu.koboo.atcommand:bungee-plugin:1.2.1'
+    compileOnly 'eu.koboo.atcommand:bungee-plugin:1.3.0'
 
     /* For Bukkit usage */
-    compileOnly 'eu.koboo.atcommand:bukkit-plugin:1.2.1'
+    compileOnly 'eu.koboo.atcommand:bukkit-plugin:1.3.0'
 }
 ```
 
