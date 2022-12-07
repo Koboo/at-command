@@ -21,7 +21,7 @@ public class TabCompleteListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onComplete(TabCompleteEvent event) {
-        if(!event.getCursor().startsWith("/")) {
+        if (!event.getCursor().startsWith("/")) {
             return;
         }
         List<String> completions = environment.handleCompletions(event.getSender(), event.getCursor(), event.getSuggestions());
@@ -33,16 +33,16 @@ public class TabCompleteListener implements Listener {
             if (arguments.length > 0) {
                 String lastArgument = arguments[arguments.length - 1].toLowerCase(Locale.ROOT);
                 for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
-                    if(player.getName().toLowerCase(Locale.ROOT).startsWith(lastArgument) && !completions.contains(player.getName())) {
-                        completions.add(player.getName());
+                    if (!player.getName().toLowerCase(Locale.ROOT).startsWith(lastArgument) || completions.contains(player.getName())) {
+                        continue;
                     }
+                    completions.add(player.getName());
                 }
             } else {
-                completions.addAll(
-                        ProxyServer.getInstance().getPlayers()
-                                .parallelStream()
-                                .map(ProxiedPlayer::getName)
-                                .collect(Collectors.toList())
+                completions.addAll(ProxyServer.getInstance().getPlayers()
+                        .stream()
+                        .map(ProxiedPlayer::getName)
+                        .collect(Collectors.toList())
                 );
             }
         }
