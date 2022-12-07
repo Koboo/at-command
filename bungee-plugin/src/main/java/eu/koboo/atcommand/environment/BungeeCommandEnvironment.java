@@ -31,7 +31,7 @@ public class BungeeCommandEnvironment extends CommandEnvironment {
 
     @Override
     public <S> void sendSenderMessage(S sender, String message) {
-        if(!(sender instanceof CommandSender)) {
+        if (!(sender instanceof CommandSender)) {
             return;
         }
         CommandSender commandSender = (CommandSender) sender;

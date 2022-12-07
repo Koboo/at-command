@@ -3,11 +3,8 @@ package eu.koboo.atcommand.parser;
 import eu.koboo.atcommand.exceptions.ParameterException;
 import org.bukkit.GameMode;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 public class GameModeParser extends ParameterParser<GameMode> {
 
@@ -16,7 +13,7 @@ public class GameModeParser extends ParameterParser<GameMode> {
     @Override
     public GameMode parse(String value) throws ParameterException {
         for (GameMode gameMode : VALUES) {
-            if(isGameMode(gameMode, value)) {
+            if (isGameMode(gameMode, value)) {
                 return gameMode;
             }
         }
@@ -35,7 +32,7 @@ public class GameModeParser extends ParameterParser<GameMode> {
 
     @SuppressWarnings("deprecation")
     private boolean isGameMode(GameMode gameMode, String value) {
-        if(value.equalsIgnoreCase(gameMode.name().toLowerCase(Locale.ROOT))) {
+        if (value.equalsIgnoreCase(gameMode.name().toLowerCase(Locale.ROOT))) {
             return true;
         }
         return value.equalsIgnoreCase(String.valueOf(gameMode.getValue()));

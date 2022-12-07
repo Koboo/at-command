@@ -15,12 +15,13 @@ public class ServerCommandListener implements Listener {
 
     BukkitCommandEnvironment environment;
 
+    @SuppressWarnings("unused")
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onConsoleProcess(ServerCommandEvent event) {
-        if(environment == null) {
+        if (environment == null) {
             return;
         }
-        if(environment.handleCommand(event.getSender(), event.getCommand())) {
+        if (environment.handleCommand(event.getSender(), event.getCommand())) {
             event.setCancelled(true);
         }
     }

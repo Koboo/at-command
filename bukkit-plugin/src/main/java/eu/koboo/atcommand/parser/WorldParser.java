@@ -4,17 +4,14 @@ import eu.koboo.atcommand.exceptions.ParameterException;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.stream.Collectors;
 
 public class WorldParser extends ParameterParser<World> {
 
     @Override
     public World parse(String value) throws ParameterException {
         for (World world : Bukkit.getWorlds()) {
-            if(value.equalsIgnoreCase(world.getName())) {
+            if (value.equalsIgnoreCase(world.getName())) {
                 return world;
             }
         }

@@ -42,15 +42,15 @@ subprojects {
 
     processResources {
         filter ReplaceTokens, tokens: [
-            "PROJECT_VERSION": "$projectVersion".toString(),
-            "PROJECT_NAME": project.name.toString(),
-            "PLUGIN_AUTHOR": "$pluginAuthor".toString(),
-            "PLUGIN_MAIN": "$pluginMain".toString()
+                "PROJECT_VERSION": "$projectVersion".toString(),
+                "PROJECT_NAME"   : project.name.toString(),
+                "PLUGIN_AUTHOR"  : "$pluginAuthor".toString(),
+                "PLUGIN_MAIN"    : "$pluginMain".toString()
         ]
     }
 
     task buildPlugin(type: Copy) {
-        if(project.name.equalsIgnoreCase("core")) {
+        if (project.name.equalsIgnoreCase("core")) {
             return;
         }
         var outputDir = rootProject.projectDir.getAbsolutePath() + "/output/"

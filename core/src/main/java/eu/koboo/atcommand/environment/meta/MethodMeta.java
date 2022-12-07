@@ -20,5 +20,4 @@ public class MethodMeta {
     Method method;
     Map<Integer, Class<?>> parameterIndex;
     CommandSyntax syntax;
-
 }

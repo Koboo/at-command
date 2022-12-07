@@ -71,7 +71,7 @@ public abstract class CommandEnvironment implements Environment {
     public <D> void addDependency(D object) {
         // Register the given instance of the object as dependency for commands
         Class<?> objectClass = object.getClass();
-        if(dependencyRegistry.containsKey(objectClass)) {
+        if (dependencyRegistry.containsKey(objectClass)) {
             throw new IllegalStateException("Dependency of " + objectClass.getName() + " is already registered!");
         }
         dependencyRegistry.put(objectClass, object);
@@ -80,7 +80,7 @@ public abstract class CommandEnvironment implements Environment {
     @Override
     public <D> D getDependency(Class<D> dependencyClass) {
         // Return the instance of the given dependency class
-        if(!dependencyRegistry.containsKey(dependencyClass)) {
+        if (!dependencyRegistry.containsKey(dependencyClass)) {
             return null;
         }
         Object dependency = dependencyRegistry.get(dependencyClass);
@@ -96,14 +96,14 @@ public abstract class CommandEnvironment implements Environment {
         Reflections reflections = new Reflections(new ConfigurationBuilder().filterInputsBy(filterBuilder));
 
         Set<Class<?>> commandClasses = reflections.get(Scanners.TypesAnnotated.with(Label.class).asClass());
-        if(commandClasses == null) {
+        if (commandClasses == null) {
             commandClasses = new HashSet<>();
         }
         Set<Class<?>> globalCommandClasses = reflections.get(Scanners.TypesAnnotated.with(Global.class).asClass());
         commandClasses.addAll(globalCommandClasses);
         globalCommandClasses.clear();
 
-        if(commandClasses.isEmpty()) {
+        if (commandClasses.isEmpty()) {
             return;
         }
 
@@ -111,14 +111,14 @@ public abstract class CommandEnvironment implements Environment {
 
             // Search for the required no-args constructor
             Constructor<?>[] constructorArray = commandClass.getDeclaredConstructors();
-            if(constructorArray.length == 0) {
+            if (constructorArray.length == 0) {
                 throw new NullPointerException("Couldn't find any constructor in " + commandClass.getName());
             }
             Constructor<?> constructor = constructorArray[0];
-            if(constructor.getParameterCount() > 0) {
+            if (constructor.getParameterCount() > 0) {
                 throw new IllegalArgumentException("Constructor of " + commandClass.getName() + " isn't allowed to have parameters!");
             }
-            if(!Modifier.isPublic(constructor.getModifiers())) {
+            if (!Modifier.isPublic(constructor.getModifiers())) {
                 throw new IllegalStateException("Constructor of " + commandClass.getName() + " isn't public and can't get accessed.");
             }
 
@@ -128,12 +128,12 @@ public abstract class CommandEnvironment implements Environment {
 
                 // Check for dependencies in the fields.
                 for (Field declaredField : commandClass.getDeclaredFields()) {
-                    if(!declaredField.isAnnotationPresent(Dependency.class)) {
+                    if (!declaredField.isAnnotationPresent(Dependency.class)) {
                         continue;
                     }
                     Class<?> fieldClass = declaredField.getType();
                     Object dependency = getDependency(fieldClass);
-                    if(!dependencyRegistry.containsKey(fieldClass) || dependency == null) {
+                    if (!dependencyRegistry.containsKey(fieldClass) || dependency == null) {
                         throw new NullPointerException("Couldn't find dependency of " + commandClass.getName() + " in registry!");
                     }
                     declaredField.setAccessible(true);
@@ -188,7 +188,7 @@ public abstract class CommandEnvironment implements Environment {
     public void registerParser(ParameterParser<?> parameterParser, boolean override) {
         addParserByType(parameterParser, parameterParser.getType(), override);
         Class<?>[] extraTypes = parameterParser.getExtraTypes();
-        if(extraTypes == null || extraTypes.length == 0) {
+        if (extraTypes == null) {
             return;
         }
         for (Class<?> extraType : extraTypes) {
@@ -350,9 +350,9 @@ public abstract class CommandEnvironment implements Environment {
                 return false;
             }
             String message = null;
-            if(e instanceof ConditionException) {
+            if (e instanceof ConditionException) {
                 message = e.getMessage();
-            } else if(e.getCause() instanceof ConditionException) {
+            } else if (e.getCause() instanceof ConditionException) {
                 message = e.getCause().getMessage();
             }
             sendSenderMessage(sender, message);

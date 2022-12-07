@@ -3,6 +3,7 @@ package eu.koboo.atcommand.test;
 import eu.koboo.atcommand.AtCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
+@SuppressWarnings("unused")
 public class TestPlugin extends JavaPlugin {
 
     @Override

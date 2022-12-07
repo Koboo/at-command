@@ -11,10 +11,10 @@ public abstract class ParameterParser<T> {
     public abstract T parse(String value) throws ParameterException;
 
     public String friendlyName() {
-        if(getType().isEnum()) {
+        if (getType().isEnum()) {
             StringBuilder enumBuilder = new StringBuilder();
             for (T enumConstant : getType().getEnumConstants()) {
-                if(enumConstant instanceof Enum<?>) {
+                if (enumConstant instanceof Enum<?>) {
                     Enum<?> anEnum = (Enum<?>) enumConstant;
                     enumBuilder.append(anEnum.name()).append(" | ");
                 }
@@ -30,12 +30,12 @@ public abstract class ParameterParser<T> {
     }
 
     @SuppressWarnings("all")
-    public Class<T> getType(){
+    public Class<T> getType() {
         return ((Class<T>) ((ParameterizedType) getClass()
                 .getGenericSuperclass()).getActualTypeArguments()[0]);
     }
 
     public Class<?>[] getExtraTypes() {
-        return null;
+        return new Class[]{};
     }
 }

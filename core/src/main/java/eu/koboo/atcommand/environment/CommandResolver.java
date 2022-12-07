@@ -36,7 +36,7 @@ public class CommandResolver {
         List<String> commandLabelList = new ArrayList<>();
         if (!isGlobalCommand) {
             Label[] labels = commandClass.getAnnotationsByType(Label.class);
-            if(labels.length == 0) {
+            if (labels.length == 0) {
                 throw new InvalidCommandException(className + " must have at least one @Label annotation!");
             }
 
@@ -177,7 +177,7 @@ public class CommandResolver {
             Subcommand subcommandAnnotation = method.getAnnotation(Subcommand.class);
             subCommand = subcommandAnnotation.value();
             String annotationUsage = subcommandAnnotation.usage();
-            if(!annotationUsage.equalsIgnoreCase("")) {
+            if (!annotationUsage.equalsIgnoreCase("")) {
                 usage = annotationUsage;
             }
         }
@@ -188,7 +188,7 @@ public class CommandResolver {
         }
 
         CommandSyntax commandSyntax;
-        if(usage == null) {
+        if (usage == null) {
             StringBuilder syntaxBuilder = new StringBuilder();
             if (subCommand != null && !subCommand.equalsIgnoreCase("")) {
                 syntaxBuilder.append(subCommand).append(" ");

@@ -26,14 +26,14 @@ public class BooleanParser extends ParameterParser<Boolean> {
 
     @Override
     public Boolean parse(String value) throws ParameterException {
-        if(value.equalsIgnoreCase("yes")
+        if (value.equalsIgnoreCase("yes")
                 || value.equalsIgnoreCase("1")
                 || value.equalsIgnoreCase("on")
                 || value.equalsIgnoreCase("true")
                 || value.equalsIgnoreCase("allow")) {
             return true;
         }
-        if(value.equalsIgnoreCase("no")
+        if (value.equalsIgnoreCase("no")
                 || value.equalsIgnoreCase("0")
                 || value.equalsIgnoreCase("off")
                 || value.equalsIgnoreCase("false")
@@ -45,13 +45,13 @@ public class BooleanParser extends ParameterParser<Boolean> {
 
     @Override
     public List<String> complete(String value) {
-        if(value == null) {
+        if (value == null) {
             return new ArrayList<>(COMPLETIONS);
         } else {
             value = value.toLowerCase(Locale.ROOT);
             List<String> completions = new ArrayList<>();
             for (String completion : COMPLETIONS) {
-                if(completion.startsWith(value) && !completions.contains(completion)) {
+                if (completion.startsWith(value) && !completions.contains(completion)) {
                     completions.add(value);
                 }
             }

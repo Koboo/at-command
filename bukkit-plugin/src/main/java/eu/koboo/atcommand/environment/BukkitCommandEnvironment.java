@@ -1,8 +1,6 @@
 package eu.koboo.atcommand.environment;
 
 import eu.koboo.atcommand.environment.meta.CommandMeta;
-import eu.koboo.atcommand.parser.GameModeParser;
-import eu.koboo.atcommand.parser.WorldParser;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.bukkit.command.CommandSender;
@@ -24,9 +22,6 @@ public class BukkitCommandEnvironment extends CommandEnvironment {
 
     public BukkitCommandEnvironment(JavaPlugin plugin) {
         this.plugin = plugin;
-
-        registerParser(new GameModeParser());
-        registerParser(new WorldParser());
 
         try {
             Field commandMapField = null;
@@ -61,7 +56,7 @@ public class BukkitCommandEnvironment extends CommandEnvironment {
 
     @Override
     public <S> void sendSenderMessage(S sender, String message) {
-        if(!(sender instanceof CommandSender)){
+        if (!(sender instanceof CommandSender)) {
             return;
         }
         CommandSender commandSender = (CommandSender) sender;

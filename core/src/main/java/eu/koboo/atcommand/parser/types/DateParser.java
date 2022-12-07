@@ -21,11 +21,11 @@ public class DateParser extends ParameterParser<Date> {
             } catch (ParseException e) {
                 // ignoring, we try every pattern
             }
-            if(date != null) {
+            if (date != null) {
                 break;
             }
         }
-        if(date == null) {
+        if (date == null) {
             throw new ParameterException(value + " is not a valid date!");
         }
         return date;

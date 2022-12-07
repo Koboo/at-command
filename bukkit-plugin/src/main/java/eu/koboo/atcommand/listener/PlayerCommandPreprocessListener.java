@@ -16,15 +16,16 @@ public class PlayerCommandPreprocessListener implements Listener {
     BukkitCommandEnvironment environment;
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    @SuppressWarnings("unused")
     public void onPreProcess(PlayerCommandPreprocessEvent event) {
         String message = event.getMessage();
-        if(message.startsWith("/")) {
+        if (message.startsWith("/")) {
             message = message.substring(1);
         }
-        if(environment == null) {
+        if (environment == null) {
             return;
         }
-        if(environment.handleCommand(event.getPlayer(), message)) {
+        if (environment.handleCommand(event.getPlayer(), message)) {
             event.setCancelled(true);
         }
     }

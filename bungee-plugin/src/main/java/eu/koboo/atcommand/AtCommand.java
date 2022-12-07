@@ -30,7 +30,7 @@ public class AtCommand extends Plugin {
 
     @Override
     public void onDisable() {
-        if(environment != null) {
+        if (environment != null) {
             environment.destroy();
         }
         log.info("Destroyed " + BungeeCommandEnvironment.class.getName() + "!");

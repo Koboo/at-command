@@ -12,11 +12,12 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 @Global
+@SuppressWarnings("unused")
 public class TestGlobalCommand {
 
     @WrongSender
     public void wrongSender(CommandSender sender) {
-        if(sender instanceof Player) {
+        if (sender instanceof Player) {
             sender.sendMessage("You're not console!");
         } else {
             sender.sendMessage("You're not a player!");
@@ -33,7 +34,7 @@ public class TestGlobalCommand {
 
     @OnError
     public void onError(CommandSender sender, String error) {
-        String addition = error  == null ? "" : " (" + error + ")";
+        String addition = error == null ? "" : " (" + error + ")";
         sender.sendMessage("An internal error occurred." + addition);
     }
 

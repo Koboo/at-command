@@ -57,7 +57,7 @@ public class BukkitRootCommand extends Command {
             if (arguments.length > 0) {
                 String lastArgument = arguments[arguments.length - 1].toLowerCase(Locale.ROOT);
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    if(!player.getName().toLowerCase(Locale.ROOT).startsWith(lastArgument) || completions.contains(player.getName())) {
+                    if (!player.getName().toLowerCase(Locale.ROOT).startsWith(lastArgument) || completions.contains(player.getName())) {
                         continue;
                     }
                     completions.add(player.getName());

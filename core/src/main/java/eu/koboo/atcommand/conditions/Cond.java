@@ -5,7 +5,7 @@ import eu.koboo.atcommand.exceptions.ConditionException;
 public class Cond {
 
     public static void check(boolean conditionStatement, String message) {
-        if(!conditionStatement) {
+        if (!conditionStatement) {
             throw new ConditionException(message);
         }
     }
