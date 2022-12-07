@@ -23,21 +23,7 @@ public class WorldParser extends ParameterParser<World> {
 
     @Override
     public List<String> complete(String value) {
-        if(value == null) {
-            return Bukkit.getWorlds().stream()
-                    .map(World::getName)
-                    .collect(Collectors.toList());
-        } else {
-            value = value.toLowerCase(Locale.ROOT);
-            List<String> completions = new ArrayList<>();
-            for (World world : Bukkit.getWorlds()) {
-                String completion = world.getName().toLowerCase(Locale.ROOT);
-                if(completion.startsWith(value) && !completions.contains(completion)) {
-                    completions.add(value);
-                }
-            }
-            return completions;
-        }
+        return ParserUtility.complete(value, Bukkit.getWorlds(), World::getName);
     }
 
     @Override

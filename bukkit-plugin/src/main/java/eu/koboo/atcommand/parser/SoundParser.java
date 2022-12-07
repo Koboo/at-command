@@ -2,6 +2,7 @@ package eu.koboo.atcommand.parser;
 
 import eu.koboo.atcommand.exceptions.ParameterException;
 import org.bukkit.GameMode;
+import org.bukkit.Sound;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,28 +10,28 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
-public class GameModeParser extends ParameterParser<GameMode> {
+public class SoundParser extends ParameterParser<Sound> {
 
-    private static final GameMode[] VALUES = GameMode.values();
+    private static final Sound[] VALUES = Sound.values();
 
     @Override
-    public GameMode parse(String value) throws ParameterException {
-        for (GameMode gameMode : VALUES) {
-            if(isGameMode(gameMode, value)) {
-                return gameMode;
+    public Sound parse(String value) throws ParameterException {
+        for (Sound sound : VALUES) {
+            if(sound.getKey().getKey().equalsIgnoreCase(value) || sound.name().equalsIgnoreCase(value)) {
+                return sound;
             }
         }
-        throw new ParameterException(value + " is not valid gameMode.");
+        throw new ParameterException(value + " is not valid sound.");
     }
 
     @Override
     public String friendlyName() {
-        return "GameMode";
+        return "Sound";
     }
 
     @Override
     public List<String> complete(String value) {
-        return ParserUtility.complete(value, VALUES, GameMode::name);
+        return ParserUtility.complete(value, VALUES, Sound::name);
     }
 
     @SuppressWarnings("deprecation")
