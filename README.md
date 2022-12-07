@@ -241,6 +241,7 @@ Dependency logic can be used to set custom values in the fields of the dynamic c
 public class TestCommand {
 
     // The instance of your object gets automatically injected from the environment
+    @Dependency
     MyDatabaseManager manager;
 
     public TestCommand() {
@@ -268,18 +269,21 @@ These ``ParameterParser<ObjectToParse>`` are by default added to the environment
 
 Java-related:
 
-* ``StringParser``
-* ``LongParser``
-* ``IntegerParser``
-* ``FloatParser``
+* ``BooleanParser``
+* ``DateParser``
 * ``DoubleParser``
+* ``FloatParser``
+* ``IntegerParser``
+* ``LongParser``
 * ``ShortParser``
+* ``StringParser``
 * ``UUIDParser``
 
 Bukkit-related:
 
 * ``GameModeParser``
 * ``WorldParser``
+* ``SoundParser``
 
 Also, if there are no other suggestions, all player names are automatically added as suggestions.
 
