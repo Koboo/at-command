@@ -63,11 +63,11 @@ public class TestCommand {
 }
 ````
 
-You can create a ``@Global`` command with the handler-methods of the following annotations 
+You can create a ``@Global`` command with the handler-methods of the following annotations
 - ``@OnHelp``
 - ``@OnError``
 - ``@WrongSender``
-- ``@NoPermission`` 
+- ``@NoPermission``
 
 The handler-methods can also be created in the individual commands. 
 If a command has its own handler-method, this one will be executed instead of the method from the ``@Global`` command. 
@@ -80,8 +80,8 @@ public class TestGlobalCommand {
 
     @WrongSender
     public void wrongSender(CommandSender sender) {
-        if(sender instanceof Player) {
-            sender.sendMessage("You're not console!");
+        if(sender instanceof Player player) {
+            player.sendMessage("You're not console!");
         } else {
             sender.sendMessage("You're not a player!");
         }
@@ -152,7 +152,7 @@ public class ExampleCommand {
     
     // Ingame-Command: "/example send <Some text with spaces, which need to get merged>" 
     @Subcommand("send")
-    @MergeText // Concat arguments to text
+    @MergeText // Merge arguments to text
     public void onSend(CommandSender sender, String text) {
         sender.sendMessage("You send '" + text + "' by executing /example send <Text>");
     }
@@ -164,11 +164,11 @@ public class ExampleCommand {
 And how can you set specific permissions for a command? Do you have to check them yourself, 
 although there is a ``@NoPermission`` method?
 
-Answer: **No!**
+The answer is as simple as you do it: **No!**
 
 To define permissions you just have to use the ``@Access("permission")`` annotation. 
 
-This works for a command and for methods, even together!
+This works for a class of a command and for the inner methods, even together!
 If a player does not have the permission, the ``@NoPermission`` method is called.
 
 ## Help
@@ -226,11 +226,11 @@ Dependency logic can be used to set custom values in the fields of the dynamic c
 // ...
 public class TestCommand {
     
-    // The manager gets automatically injected by the environment
+    // The instance of your object gets automatically injected from the environment
     MyDatabaseManager manager;
     
     public TestCommand() {
-        // You can also use lomboks "@NoArgsConstructor"
+        // You can also use the "@NoArgsConstructor" from lombok
     }
     
     // ...
@@ -239,10 +239,10 @@ public class TestCommand {
 public class TestPlugin extends JavaPlugin {
     public void onEnable() {
         Environment environment = AtCommand.getEnvironment();
-        // Add an instance of the manager to the dependency-registry
+        // Add an instance of your object to the dependencies of the environment
         environment.addDependency(new MyDatabaseManager());
         
-        // Register all commands in the package "eu.koboo.at.command.test" and "eu.koboo.otherplugin.commands"
+        // Register all commands in the packages "eu.koboo.at.command.test" and "eu.koboo.otherplugin.commands"
         environment.registerCommandsIn("eu.koboo.atcommand.test", "eu.koboo.otherplugin.commands");
     }
 }
@@ -277,7 +277,7 @@ The best example of how a ``ParameterParser`` works is the ``BooleanParser``:
 // In this example it's a Boolean.
 public class BooleanParser extends ParameterParser<Boolean> {
 
-    // A static final List of all possible arguments for the (optional) auto-completion
+    // A List of all possible subarguments for the auto-completion
     private static final List<String> COMPLETIONS = new ArrayList<>();
 
     static {
@@ -325,7 +325,7 @@ public class BooleanParser extends ParameterParser<Boolean> {
         } else {
             value = value.toLowerCase(Locale.ROOT);
             List<String> completions = new ArrayList<>();
-            // Check if the typed value if present in our subarguments and add them to the list.
+            // Check if the typed value starts with anything present in our subarguments and add them to the list.
             for (String completion : COMPLETIONS) {
                 if(completion.startsWith(value) && !completions.contains(completion)) {
                     completions.add(value);
@@ -335,7 +335,7 @@ public class BooleanParser extends ParameterParser<Boolean> {
         }
     }
 
-    // Create a user-friendly name for the usages.
+    // Create a user-friendly name for the usage-messages.
     @Override
     public String friendlyName() {
         return "true (yes/on/1/allow) | false (no/off/0/disallow)";
