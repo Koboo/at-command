@@ -27,7 +27,6 @@ public class AtCommand extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new PlayerCommandPreprocessListener(environment), this);
         Bukkit.getPluginManager().registerEvents(new ServerCommandListener(environment), this);
         log.info("Registered listeners for " + BukkitCommandEnvironment.class.getName() + "!");
-        environment.registerCommand(new TestCommand());
         super.onEnable();
     }
 
