@@ -8,6 +8,13 @@ import java.lang.annotation.Target;
 /**
  * This annotation is used to handle the help messages
  * of a command.
+ * Method-Signature:
+ * <pre>
+ * @OnHelp
+*  public void onHelp(CommandSender sender, String command, List<CommandSyntax> syntaxList) {
+ *     // Some magic
+ * }
+ * </pre>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
