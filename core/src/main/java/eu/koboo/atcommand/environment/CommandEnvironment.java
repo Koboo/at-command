@@ -336,7 +336,6 @@ public abstract class CommandEnvironment implements Environment {
                 if (hasMethodWrongParams) {
                     continue;
                 }
-
                 if (handleSenderType(command, meta, sender, methodMeta)) {
                     return true;
                 }
