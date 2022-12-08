@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  * Method-Signature:
  * <pre>
  * @OnHelp
-*  public void onHelp(CommandSender sender, String command, List<CommandSyntax> syntaxList) {
+ * public void onHelp(CommandSender sender, String command, List CommandSyntax syntaxList) {
  *     // Some magic
  * }
  * </pre>

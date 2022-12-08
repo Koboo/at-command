@@ -10,11 +10,11 @@ import java.lang.annotation.Target;
  * So a method without any arguments.
  * Method-Signature:
  * <pre>
- * @Default
- * public void onDefault(CommandSender sender) {
- *     // Some magic
- * }
- * </pre>
+ *  @Default
+ *  public void onDefault(CommandSender sender) {
+ *      // Some magic
+ *  }
+ *  </pre>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

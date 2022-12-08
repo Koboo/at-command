@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  * Method-Signature:
  * <pre>
  * @OnError
-*  public void onError(CommandSender sender, String error) {
+ * public void onError(CommandSender sender, String error) {
  *     // Some magic
  * }
  * </pre>
