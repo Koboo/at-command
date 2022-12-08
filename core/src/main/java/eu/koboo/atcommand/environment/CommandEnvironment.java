@@ -196,7 +196,7 @@ public abstract class CommandEnvironment implements Environment {
         }
     }
 
-    public void addParserByType(ParameterParser<?> parameterParser, Class<?> type, boolean override) {
+    private void addParserByType(ParameterParser<?> parameterParser, Class<?> type, boolean override) {
         if (override) {
             parserRegistry.remove(type);
         }
