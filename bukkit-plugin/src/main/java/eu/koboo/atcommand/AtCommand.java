@@ -20,25 +20,8 @@ public class AtCommand extends JavaPlugin {
     @Override
     public void onLoad() {
         environment = new BukkitCommandEnvironment(this);
-
-        // Register dependencies
-        environment.addDependency(environment);
-
-        // Register parsers
-        environment.registerParser(new GameModeParser());
-        environment.registerParser(new WorldParser());
-        environment.registerParser(new SoundParser());
-
         log.info("Initialized " + BukkitCommandEnvironment.class.getName() + "!");
         super.onLoad();
-    }
-
-    @Override
-    public void onEnable() {
-        Bukkit.getPluginManager().registerEvents(new PlayerCommandPreprocessListener(environment), this);
-        Bukkit.getPluginManager().registerEvents(new ServerCommandListener(environment), this);
-        log.info("Registered listeners for " + BukkitCommandEnvironment.class.getName() + "!");
-        super.onEnable();
     }
 
     @Override

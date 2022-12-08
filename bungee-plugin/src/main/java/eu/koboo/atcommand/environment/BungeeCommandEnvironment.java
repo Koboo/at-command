@@ -1,23 +1,32 @@
 package eu.koboo.atcommand.environment;
 
-import eu.koboo.atcommand.AtCommand;
 import eu.koboo.atcommand.environment.meta.CommandMeta;
+import eu.koboo.atcommand.listener.TabCompleteListener;
 import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BungeeCommandEnvironment extends CommandEnvironment {
 
-    AtCommand plugin;
+    Plugin plugin;
+
+    public BungeeCommandEnvironment(Plugin plugin) {
+        this.plugin = plugin;
+
+        // Adding dependencies
+        addDependency(this);
+
+        // Register listeners
+        ProxyServer.getInstance().getPluginManager().registerListener(plugin, new TabCompleteListener(this));
+    }
 
     @Override
     public Class<?> getPlayerClass() {

@@ -1,8 +1,14 @@
 package eu.koboo.atcommand.environment;
 
 import eu.koboo.atcommand.environment.meta.CommandMeta;
+import eu.koboo.atcommand.listener.PlayerCommandPreprocessListener;
+import eu.koboo.atcommand.listener.ServerCommandListener;
+import eu.koboo.atcommand.parser.GameModeParser;
+import eu.koboo.atcommand.parser.SoundParser;
+import eu.koboo.atcommand.parser.WorldParser;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.SimpleCommandMap;
@@ -22,6 +28,18 @@ public class BukkitCommandEnvironment extends CommandEnvironment {
 
     public BukkitCommandEnvironment(JavaPlugin plugin) {
         this.plugin = plugin;
+
+        // Add dependencies
+        addDependency(this);
+
+        // Register parsers
+        registerParser(new GameModeParser());
+        registerParser(new WorldParser());
+        registerParser(new SoundParser());
+
+        // Register listeners
+        Bukkit.getPluginManager().registerEvents(new PlayerCommandPreprocessListener(this), plugin);
+        Bukkit.getPluginManager().registerEvents(new ServerCommandListener(this), plugin);
 
         try {
             Field commandMapField = null;
