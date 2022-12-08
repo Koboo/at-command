@@ -2,6 +2,7 @@ package eu.koboo.atcommand.parser.types;
 
 import eu.koboo.atcommand.exceptions.ParameterException;
 import eu.koboo.atcommand.parser.ParameterParser;
+import eu.koboo.atcommand.parser.ParserUtility;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,18 +46,7 @@ public class BooleanParser extends ParameterParser<Boolean> {
 
     @Override
     public List<String> complete(String value) {
-        if (value == null) {
-            return new ArrayList<>(COMPLETIONS);
-        } else {
-            value = value.toLowerCase(Locale.ROOT);
-            List<String> completions = new ArrayList<>();
-            for (String completion : COMPLETIONS) {
-                if (completion.startsWith(value) && !completions.contains(completion)) {
-                    completions.add(value);
-                }
-            }
-            return completions;
-        }
+        return ParserUtility.complete(value, COMPLETIONS, s -> s);
     }
 
     @Override

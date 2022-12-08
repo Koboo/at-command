@@ -15,4 +15,9 @@ public class UUIDParser extends ParameterParser<UUID> {
             throw new ParameterException(value + " is not a valid UUID.");
         }
     }
+
+    @Override
+    public String friendlyName() {
+        return "UUID";
+    }
 }

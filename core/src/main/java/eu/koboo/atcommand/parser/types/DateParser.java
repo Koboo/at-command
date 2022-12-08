@@ -30,4 +30,9 @@ public class DateParser extends ParameterParser<Date> {
         }
         return date;
     }
+
+    @Override
+    public String friendlyName() {
+        return "Date";
+    }
 }
