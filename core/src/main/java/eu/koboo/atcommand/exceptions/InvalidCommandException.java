@@ -8,6 +8,7 @@ public class InvalidCommandException extends Exception {
 
     /**
      * The default constructor of the exception
+     *
      * @param message The message which is shown in the StackTrace
      */
     public InvalidCommandException(String message) {

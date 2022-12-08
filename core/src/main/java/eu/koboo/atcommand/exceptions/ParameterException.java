@@ -8,6 +8,7 @@ public class ParameterException extends Exception {
 
     /**
      * The default constructor of the exception
+     *
      * @param message The message, which is passed to the error method.
      */
     public ParameterException(String message) {

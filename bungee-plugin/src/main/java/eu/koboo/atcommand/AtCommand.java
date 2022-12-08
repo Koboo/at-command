@@ -1,10 +1,8 @@
 package eu.koboo.atcommand;
 
 import eu.koboo.atcommand.environment.BungeeCommandEnvironment;
-import eu.koboo.atcommand.listener.TabCompleteListener;
 import lombok.Getter;
 import lombok.extern.java.Log;
-import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 
 @Log

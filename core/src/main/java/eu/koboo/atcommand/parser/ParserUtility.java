@@ -18,6 +18,7 @@ public class ParserUtility {
 
     /**
      * This method creates an array of arguments using the given command string.
+     *
      * @param commandString The command string executed by the sender
      * @return An array of all arguments of the command string.
      */
@@ -33,11 +34,12 @@ public class ParserUtility {
 
     /**
      * This method is used to simplify auto-completion.
-     * @param value The argument parsed in by ParameterParser#complete.
-     * @param itemList A list of all possible auto-completions.
+     *
+     * @param value           The argument parsed in by ParameterParser#complete.
+     * @param itemList        A list of all possible auto-completions.
      * @param stringConverter A Function, to convert any T into a string representation.
+     * @param <T>             The generic type of the ParameterParser
      * @return The list of possible auto-completions of the value.
-     * @param <T> The generic type of the ParameterParser
      */
     public <T> List<String> complete(String value, List<T> itemList, Function<T, String> stringConverter) {
         if (value == null) {

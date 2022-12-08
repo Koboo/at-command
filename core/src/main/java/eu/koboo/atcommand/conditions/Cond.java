@@ -12,7 +12,7 @@ public class Cond {
 
     /**
      * @param conditionStatement The boolean which is checked.
-     * @param message The message of the failed condition.
+     * @param message            The message of the failed condition.
      */
     public void check(boolean conditionStatement, String message) {
         if (!conditionStatement) {

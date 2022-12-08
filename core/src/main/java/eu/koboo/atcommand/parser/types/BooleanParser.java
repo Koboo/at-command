@@ -7,7 +7,6 @@ import eu.koboo.atcommand.parser.ParserUtility;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 public class BooleanParser extends ParameterParser<Boolean> {
 

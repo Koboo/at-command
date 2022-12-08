@@ -7,6 +7,7 @@ public class ConditionException extends IllegalStateException {
 
     /**
      * The default constructor of the exception
+     *
      * @param message The message, which is passed to the error method.
      */
     public ConditionException(String message) {
