@@ -34,7 +34,7 @@ public interface Environment {
      * @param <S>        The generic type of the sender.
      * @return if the sender has the permission on the platform.
      */
-    <S> boolean hasNotPermission(S sender, String permission);
+    <S> boolean hasPermission(S sender, String permission);
 
     /**
      * This method adds a dependency of an object to the environment,

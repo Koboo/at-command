@@ -82,7 +82,7 @@ public class BukkitCommandEnvironment extends CommandEnvironment {
     }
 
     @Override
-    public <T> boolean hasNotPermission(T sender, String permission) {
+    public <T> boolean hasPermission(T sender, String permission) {
         return !((CommandSender) sender).hasPermission(permission);
     }
 

@@ -48,7 +48,7 @@ public class BungeeCommandEnvironment extends CommandEnvironment {
     }
 
     @Override
-    public <S> boolean hasNotPermission(S sender, String permission) {
+    public <S> boolean hasPermission(S sender, String permission) {
         return !((CommandSender) sender).hasPermission(permission);
     }
 

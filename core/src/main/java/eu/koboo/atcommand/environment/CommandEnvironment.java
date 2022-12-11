@@ -220,7 +220,7 @@ public abstract class CommandEnvironment implements Environment {
         Object command = entry.getKey();
         CommandMeta meta = entry.getValue();
         try {
-            if (meta.hasRootPermission() && hasNotPermission(sender, meta.getRootPermission())) {
+            if (meta.hasRootPermission() && hasPermission(sender, meta.getRootPermission())) {
                 return callNoPermission(command, meta, sender, meta.getRootPermission(), commandString);
             }
 
@@ -466,7 +466,7 @@ public abstract class CommandEnvironment implements Environment {
             CommandMeta meta = commandRegistry.get(command);
 
             // Ignored, sender doesn't have permission to use this command
-            if (meta.hasRootPermission() && hasNotPermission(sender, meta.getRootPermission())) {
+            if (meta.hasRootPermission() && hasPermission(sender, meta.getRootPermission())) {
                 continue;
             }
 
