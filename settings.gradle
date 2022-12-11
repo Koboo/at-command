@@ -4,4 +4,5 @@ include 'bukkit-plugin-test'
 include 'bungee-plugin'
 include 'bungee-plugin-test'
 include 'core'
+include 'velocity-plugin'
 
