@@ -34,7 +34,7 @@ public class VelocityCommandEnvironment extends CommandEnvironment {
 
     @Override
     public <S> void sendSenderMessage(S sender, String message) {
-        if(!(sender instanceof Invocation)) {
+        if (!(sender instanceof Invocation)) {
             return;
         }
         Component component = LegacyComponentSerializer.legacyAmpersand().deserialize(message);
@@ -44,7 +44,7 @@ public class VelocityCommandEnvironment extends CommandEnvironment {
 
     @Override
     public <S> boolean hasPermission(S sender, String permission) {
-        if(!(sender instanceof Invocation)) {
+        if (!(sender instanceof Invocation)) {
             return false;
         }
         Invocation invocation = (Invocation) sender;
