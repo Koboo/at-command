@@ -2,6 +2,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
     id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'net.kyori.blossom' version '1.2.0'
 }
 
 subprojects {
@@ -23,6 +24,10 @@ subprojects {
             name 'spigot-repo'
             url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
         }
+        maven {
+            name 'paper-repo'
+            url 'https://repo.papermc.io/repository/maven-public/'
+        }
     }
 
     dependencies {
@@ -40,6 +45,7 @@ subprojects {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
+    // Used for plugin.yml replacements
     processResources {
         filter ReplaceTokens, tokens: [
                 "PROJECT_VERSION": "$projectVersion".toString(),
@@ -47,6 +53,13 @@ subprojects {
                 "PLUGIN_AUTHOR"  : "$pluginAuthor".toString(),
                 "PLUGIN_MAIN"    : "$pluginMain".toString()
         ]
+    }
+
+    // Used for source-code replacements
+    blossom {
+        replaceToken("PROJECT_VERSION", "$projectVersion".toString())
+        replaceToken("PROJECT_NAME", project.name.toString())
+        replaceToken("PLUGIN_AUTHOR", "$pluginAuthor".toString())
     }
 
     task buildPlugin(type: Copy) {
